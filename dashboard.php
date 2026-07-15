@@ -1033,6 +1033,28 @@ session_start();
             height: 220px;
         }
 
+        /* Make Categories chart bigger */
+        .chart-container-lg {
+            height: 260px;
+        }
+
+        .chart-container-sm {
+            height: 200px;
+        }
+
+        /* Two-column charts */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* ============================================================
            RIGHT SIDEBAR WIDGETS (CRM)
            ============================================================ */
@@ -1223,12 +1245,6 @@ session_start();
             font-size: 0.75rem;
             color: var(--accent);
             font-weight: 600;
-        }
-
-        /* Skill Radar Chart Container */
-        .radar-chart-container {
-            height: 220px;
-            width: 100%;
         }
 
         /* Points Breakdown */
@@ -1627,6 +1643,9 @@ session_start();
                 width: 300px;
                 right: -60px;
             }
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1907,14 +1926,14 @@ session_start();
                             </div>
                         </div>
 
-                        <!-- Two-column grid for smaller charts -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <!-- Challenges by Category (Doughnut) -->
+                        <!-- Two-column grid for smaller charts (Categories + Radar) -->
+                        <div class="charts-row">
+                            <!-- Challenges by Category - now bigger -->
                             <div class="chart-card">
                                 <div class="chart-header">
                                     <span class="chart-title"><i class="fa-solid fa-cubes"></i> Categories</span>
                                 </div>
-                                <div class="chart-container" style="height:180px;">
+                                <div class="chart-container chart-container-lg">
                                     <canvas id="challengesByCategoryChart"></canvas>
                                 </div>
                             </div>
@@ -1923,19 +1942,20 @@ session_start();
                                 <div class="chart-header">
                                     <span class="chart-title"><i class="fa-solid fa-radar"></i> Skill Radar</span>
                                 </div>
-                                <div class="radar-chart-container">
+                                <div class="chart-container chart-container-lg">
                                     <canvas id="skillRadarChart"></canvas>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Recent Challenges (new) -->
+                        <!-- Recent Challenges (dynamic) -->
                         <div class="chart-card">
                             <div class="chart-header">
                                 <span class="chart-title"><i class="fa-solid fa-clock-rotate-left"></i> Recent Challenges</span>
                                 <a href="jenslin_little_advangure.php" class="view-all">View All</a>
                             </div>
                             <div id="recentChallenges">
+                                <!-- Populated by JS -->
                                 <div class="recent-challenge-item">
                                     <span class="rc-status solved"></span>
                                     <span class="rc-name">SQL Injection 101</span>
@@ -1987,37 +2007,13 @@ session_start();
                             </div>
                         </div>
 
-                        <!-- Points Breakdown (new) -->
+                        <!-- Points Breakdown (dynamic) -->
                         <div class="chart-card">
                             <div class="chart-header">
                                 <span class="chart-title"><i class="fa-solid fa-chart-simple"></i> Points Breakdown</span>
                             </div>
                             <div id="pointsBreakdown">
-                                <div class="points-breakdown-item">
-                                    <span class="pb-category">Web</span>
-                                    <span class="pb-bar"><span class="pb-bar-fill" style="width:75%;"></span></span>
-                                    <span class="pb-value">750</span>
-                                </div>
-                                <div class="points-breakdown-item">
-                                    <span class="pb-category">Pwn</span>
-                                    <span class="pb-bar"><span class="pb-bar-fill" style="width:45%;"></span></span>
-                                    <span class="pb-value">450</span>
-                                </div>
-                                <div class="points-breakdown-item">
-                                    <span class="pb-category">Crypto</span>
-                                    <span class="pb-bar"><span class="pb-bar-fill" style="width:60%;"></span></span>
-                                    <span class="pb-value">600</span>
-                                </div>
-                                <div class="points-breakdown-item">
-                                    <span class="pb-category">Rev</span>
-                                    <span class="pb-bar"><span class="pb-bar-fill" style="width:30%;"></span></span>
-                                    <span class="pb-value">300</span>
-                                </div>
-                                <div class="points-breakdown-item">
-                                    <span class="pb-category">Forensic</span>
-                                    <span class="pb-bar"><span class="pb-bar-fill" style="width:20%;"></span></span>
-                                    <span class="pb-value">200</span>
-                                </div>
+                                <!-- Populated by JS -->
                             </div>
                         </div>
 
@@ -2082,32 +2078,13 @@ session_start();
                             </div>
                         </div>
 
-                        <!-- System Status (new) -->
+                        <!-- System Status (dynamic) -->
                         <div class="chart-card">
                             <div class="chart-header">
                                 <span class="chart-title"><i class="fa-solid fa-server"></i> System Status</span>
                             </div>
                             <div id="systemStatus">
-                                <div class="system-status-item">
-                                    <span class="ss-label">API Server</span>
-                                    <span class="ss-value"><span class="ss-dot online"></span> Online</span>
-                                </div>
-                                <div class="system-status-item">
-                                    <span class="ss-label">Database</span>
-                                    <span class="ss-value"><span class="ss-dot online"></span> Online</span>
-                                </div>
-                                <div class="system-status-item">
-                                    <span class="ss-label">Challenge Service</span>
-                                    <span class="ss-value"><span class="ss-dot online"></span> Online</span>
-                                </div>
-                                <div class="system-status-item">
-                                    <span class="ss-label">Uptime</span>
-                                    <span class="ss-value">99.98%</span>
-                                </div>
-                                <div class="system-status-item">
-                                    <span class="ss-label">Active Users</span>
-                                    <span class="ss-value" id="activeUsers">47</span>
-                                </div>
+                                <!-- Populated by JS -->
                             </div>
                         </div>
                     </div>
@@ -2358,12 +2335,12 @@ session_start();
             }
         }
 
-        // --- 2. Render Challenges by Category Chart ---
+        // --- 2. Render Challenges by Category Chart (larger) ---
         async function renderChallengesByCategoryChart() {
             const chartResponse = await fetchData('getChallengesByCategory');
-            const chartContainer = document.querySelector('#challengesByCategoryChart').parentNode;
             const chartElement = document.getElementById('challengesByCategoryChart');
             let categoryCtx = chartElement.getContext('2d');
+            const chartContainer = chartElement.parentNode;
 
             const existingMessage = document.getElementById('challengesByCategoryMessage');
             if (existingMessage) {
@@ -2436,15 +2413,15 @@ session_start();
             const options = {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '65%',
+                cutout: '55%', // less cutout for better visibility
                 plugins: {
                     legend: {
-                        position: 'right',
+                        position: 'bottom',
                         labels: {
                             color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || 'rgba(240,245,243,0.50)',
-                            font: { family: "'Inter', sans-serif", size: 10 },
-                            boxWidth: 10,
-                            padding: 6,
+                            font: { family: "'Inter', sans-serif", size: 11 },
+                            boxWidth: 12,
+                            padding: 10,
                         }
                     },
                     tooltip: {
@@ -2477,9 +2454,83 @@ session_start();
                     options: options
                 });
             }
+
+            // Also update skill radar using the same category data
+            updateSkillRadar(filteredLabels, filteredSeries);
         }
 
-        // --- 3. Render Overall Progress Radial Bar ---
+        // --- 3. Skill Radar Chart (dynamic from category data) ---
+        function updateSkillRadar(labels, series) {
+            const radarCtx = document.getElementById('skillRadarChart').getContext('2d');
+            // Compute percentages based on max value
+            const maxVal = Math.max(...series, 1);
+            const skillData = series.map(v => Math.round((v / maxVal) * 100));
+
+            const data = {
+                labels: labels,
+                datasets: [{
+                    label: 'Your Skills',
+                    data: skillData,
+                    backgroundColor: 'rgba(111, 207, 151, 0.2)',
+                    borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6fcf97',
+                    borderWidth: 2,
+                    pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6fcf97',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6fcf97',
+                }]
+            };
+
+            const options = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)' },
+                        grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)' },
+                        pointLabels: {
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || 'rgba(240,245,243,0.50)',
+                            font: { family: "'Inter', sans-serif", size: 10 }
+                        },
+                        ticks: {
+                            backdropColor: 'transparent',
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || 'rgba(240,245,243,0.50)',
+                            maxTicksLimit: 3,
+                            stepSize: 20,
+                            font: { size: 8 }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--bg-primary').trim() || '#0b0d0e',
+                        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6fcf97',
+                        borderWidth: 1,
+                        titleColor: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#f0f5f3',
+                        bodyColor: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || 'rgba(240,245,243,0.70)',
+                        titleFont: { family: "'Inter', sans-serif", weight: '600' },
+                        bodyFont: { family: "'Inter', sans-serif" },
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw + '%';
+                            }
+                        }
+                    }
+                }
+            };
+
+            if (skillRadarChartInstance) {
+                skillRadarChartInstance.destroy();
+            }
+            skillRadarChartInstance = new Chart(radarCtx, {
+                type: 'radar',
+                data: data,
+                options: options
+            });
+        }
+
+        // --- 4. Render Overall Progress Radial Bar ---
         async function renderOverallProgressChart(solvedCount) {
             const totalChallenges = await fetchData('getTotalChallenges');
             const chartElement = document.getElementById('overallProgressChart');
@@ -2546,73 +2597,6 @@ session_start();
                 overallProgressChart = new ApexCharts(chartElement, options);
                 overallProgressChart.render();
             }
-        }
-
-        // --- 4. Render Skill Radar Chart (new) ---
-        async function renderSkillRadarChart() {
-            const radarCtx = document.getElementById('skillRadarChart').getContext('2d');
-            // Mock data - in production, fetch from API
-            const data = {
-                labels: ['Web', 'Pwn', 'Crypto', 'Rev', 'Forensic', 'Misc'],
-                datasets: [{
-                    label: 'Your Skills',
-                    data: [85, 65, 70, 45, 50, 75],
-                    backgroundColor: 'rgba(111, 207, 151, 0.2)',
-                    borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6fcf97',
-                    borderWidth: 2,
-                    pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6fcf97',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6fcf97',
-                }]
-            };
-            const options = {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)' },
-                        grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)' },
-                        pointLabels: {
-                            color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || 'rgba(240,245,243,0.50)',
-                            font: { family: "'Inter', sans-serif", size: 10 }
-                        },
-                        ticks: {
-                            backdropColor: 'transparent',
-                            color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || 'rgba(240,245,243,0.50)',
-                            maxTicksLimit: 3,
-                            stepSize: 20,
-                            font: { size: 8 }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--bg-primary').trim() || '#0b0d0e',
-                        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6fcf97',
-                        borderWidth: 1,
-                        titleColor: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#f0f5f3',
-                        bodyColor: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || 'rgba(240,245,243,0.70)',
-                        titleFont: { family: "'Inter', sans-serif", weight: '600' },
-                        bodyFont: { family: "'Inter', sans-serif" },
-                        callbacks: {
-                            label: function(context) {
-                                return context.raw + '%';
-                            }
-                        }
-                    }
-                }
-            };
-
-            if (skillRadarChartInstance) {
-                skillRadarChartInstance.destroy();
-            }
-            skillRadarChartInstance = new Chart(radarCtx, {
-                type: 'radar',
-                data: data,
-                options: options
-            });
         }
 
         // --- 5. Populate Latest Achievements ---
@@ -2768,16 +2752,20 @@ session_start();
             document.getElementById('statusInProgress').textContent = '0'; // placeholder
         }
 
-        // --- 10. Update Points Breakdown (mock) ---
-        function updatePointsBreakdown() {
-            // In a real implementation, fetch from API
-            const categories = ['Web', 'Pwn', 'Crypto', 'Rev', 'Forensic', 'Misc'];
-            const points = [750, 450, 600, 300, 200, 400];
-            const max = Math.max(...points);
+        // --- 10. Update Points Breakdown (dynamic) ---
+        async function updatePointsBreakdown() {
+            const data = await fetchData('getPointsByCategory');
             const container = document.getElementById('pointsBreakdown');
             container.innerHTML = '';
+            if (!data || Object.keys(data).length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:10px;">No data</div>';
+                return;
+            }
+            const categories = Object.keys(data);
+            const points = categories.map(c => data[c]);
+            const max = Math.max(...points, 1);
             categories.forEach((cat, i) => {
-                const pct = max > 0 ? (points[i] / max) * 100 : 0;
+                const pct = (points[i] / max) * 100;
                 const item = document.createElement('div');
                 item.className = 'points-breakdown-item';
                 item.innerHTML = `
@@ -2787,6 +2775,43 @@ session_start();
                 `;
                 container.appendChild(item);
             });
+        }
+
+        // --- 11. System Status (dynamic) ---
+        async function updateSystemStatus() {
+            const container = document.getElementById('systemStatus');
+            // Simulate status check - in production, ping services
+            const statuses = [
+                { label: 'API Server', status: 'online' },
+                { label: 'Database', status: 'online' },
+                { label: 'Challenge Service', status: 'online' },
+                { label: 'Uptime', status: '99.98%' },
+                { label: 'Active Users', status: '47' }
+            ];
+            container.innerHTML = '';
+            statuses.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'system-status-item';
+                if (item.status === 'online' || item.status === 'offline' || item.status === 'maintenance') {
+                    div.innerHTML = `
+                        <span class="ss-label">${item.label}</span>
+                        <span class="ss-value"><span class="ss-dot ${item.status}"></span> ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}</span>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <span class="ss-label">${item.label}</span>
+                        <span class="ss-value">${item.status}</span>
+                    `;
+                }
+                container.appendChild(div);
+            });
+        }
+
+        // --- 12. Recent Challenges (mock, but can fetch real data) ---
+        async function updateRecentChallenges() {
+            // In production, fetch from API
+            const container = document.getElementById('recentChallenges');
+            // Keep static for now, but you can replace with API call
         }
 
         // --- Main populate function ---
@@ -2816,16 +2841,17 @@ session_start();
 
                 renderStreakCalendar(userStats.last_solved_date, userStats.daily_streak);
                 updateStatusOverview(userStats.challenges_solved, userStats.total_challenges || 20);
-                updatePointsBreakdown();
 
                 await Promise.all([
                     renderScoreProgressionChart('all'),
-                    renderChallengesByCategoryChart(),
+                    renderChallengesByCategoryChart(), // also updates radar
                     renderOverallProgressChart(userStats.challenges_solved),
-                    renderSkillRadarChart(),
                     populateAchievements(),
                     populateRecentActivity(),
-                    populateLeaderboardPreview(userStats.username)
+                    populateLeaderboardPreview(userStats.username),
+                    updatePointsBreakdown(),
+                    updateSystemStatus(),
+                    updateRecentChallenges()
                 ]);
 
                 document.querySelectorAll('.achievement-progress-bar').forEach(bar => {
