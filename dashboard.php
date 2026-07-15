@@ -8,439 +8,687 @@ session_start();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Player Dashboard | Sudo Society CTF</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
   <style>
-
-    /* === Extra Small Devices (<= 400px) === */
-    @media (max-width: 400px) {
-      .container {
-        padding: 0 1rem;
-      }
-
-      .logo-text {
-        font-size: 1.1rem;
-        letter-spacing: 1px;
-      }
-
-      .user-avatar {
-        width: 32px;
-        height: 32px;
-      }
-
-      .username {
-        font-size: 0.8rem;
-      }
-
-      .score-card-title {
-        font-size: 0.8rem;
-      }
-
-      .score-card-value {
-        font-size: 1.5rem;
-      }
-
-      .period-btn {
-        font-size: 0.6rem;
-        padding: 0.2rem 0.5rem;
-      }
-
-      .chart-title {
-        font-size: 0.85rem;
-      }
-
-      .section-title {
-        font-size: 1rem;
-      }
-
-      .view-all {
-        font-size: 0.7rem;
-      }
-
-      .achievement-title {
-        font-size: 0.8rem;
-      }
-
-      .achievement-desc {
-        font-size: 0.65rem;
-      }
-
-      .activity-title {
-        font-size: 0.8rem;
-      }
-
-      .activity-time {
-        font-size: 0.65rem;
-      }
-
-      .activity-points {
-        font-size: 0.8rem;
-      }
-
-      .leaderboard-item .rank,
-      .leaderboard-item .score {
-        font-size: 0.75rem;
-      }
-
-      .leaderboard-item .username {
-        font-size: 0.75rem;
-      }
-    }
-
-    /* === Narrow Mobile Screens Fix for Sidebar === */
-    @media (max-width: 600px) {
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        order: 2;
-        margin-top: 2rem;
-      }
-
-      .main-content {
-        order: 1;
-      }
-
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .score-cards {
-        grid-template-columns: 1fr;
-      }
-
-      .achievements-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .chart-card {
-        padding: 1rem;
-      }
-    }
-
-    /* CSS Variables for consistent theming */
+    /* ============================================================
+           CSS VARIABLES (DARK MODE DEFAULT)
+           ============================================================ */
     :root {
-      --neon-green: #00ff88;
-      --neon-pink: #ff00c8;
-      --neon-blue: #00ffff;
-      --dark-bg: #0a0a0a;
-      --darker-bg: #050505;
-      --card-bg: rgba(20, 20, 20, 0.7);
-      --border-color: rgba(0, 255, 136, 0.2);
-      --text-light: #c0fccc;
-      --text-dim: rgba(192, 252, 204, 0.6);
-      --glow-light: 0 0 8px rgba(0, 255, 136, 0.5);
-      --glow-medium: 0 0 15px rgba(0, 255, 136, 0.7);
-      --glow-intense: 0 0 25px rgba(0, 255, 136, 0.9);
+      --bg-primary: #0b0d0e;
+      --bg-secondary: rgba(255, 255, 255, 0.03);
+      --text-primary: #f0f5f3;
+      --text-secondary: rgba(240, 245, 243, 0.70);
+      --text-muted: rgba(240, 245, 243, 0.40);
+
+      --accent: #6fcf97;
+      --accent-dim: rgba(111, 207, 151, 0.12);
+      --accent-glow: 0 0 40px rgba(111, 207, 151, 0.10);
+      --accent-gradient: linear-gradient(135deg, #6fcf97, #27ae60);
+
+      --glass-bg: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
+
+      --orb-1: rgba(111, 207, 151, 0.12);
+      --orb-2: rgba(46, 204, 113, 0.08);
+      --orb-3: rgba(111, 207, 151, 0.06);
+
+      --border-subtle: rgba(255, 255, 255, 0.04);
+      --card-hover-border: rgba(111, 207, 151, 0.15);
+      --card-hover-shadow: 0 12px 48px rgba(0, 0, 0, 0.50), 0 0 40px rgba(111, 207, 151, 0.06);
+
+      --logo-bg: linear-gradient(135deg, #6fcf97, #27ae60);
+      --logo-text-gradient: linear-gradient(135deg, #6fcf97, #27ae60);
+      --section-title-gradient: linear-gradient(135deg, #f0f5f3, #6fcf97);
+
+      --toggle-bg: rgba(255, 255, 255, 0.08);
+      --toggle-dot: #6fcf97;
+      --toggle-border: rgba(255, 255, 255, 0.08);
+      --toggle-icon: #f0f5f3;
+
+      --scrollbar-track: #0b0d0e;
+      --scrollbar-thumb: #6fcf97;
+
+      --footer-border: rgba(255, 255, 255, 0.04);
+      --error-color: #e74c3c;
+      --success-color: #2ecc71;
+      --warning-color: #f39c12;
+
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Barlow Condensed', 'Inter', sans-serif;
+
+      --header-bg: rgba(11, 13, 14, 0.70);
+
+      --chart-grid: rgba(255, 255, 255, 0.06);
+      --chart-text: rgba(240, 245, 243, 0.50);
+
+      --rank-gold: #f1c40f;
+      --rank-silver: #bdc3c7;
+      --rank-bronze: #e67e22;
     }
 
-    /* Basic Reset & Box Model */
-    * {
+    /* ============================================================
+           LIGHT MODE
+           ============================================================ */
+    body.light {
+      --bg-primary: #f4f7f6;
+      --bg-secondary: rgba(0, 0, 0, 0.02);
+      --text-primary: #141817;
+      --text-secondary: rgba(20, 24, 23, 0.72);
+      --text-muted: rgba(20, 24, 23, 0.45);
+
+      --accent: #c0392b;
+      --accent-dim: rgba(192, 57, 43, 0.08);
+      --accent-glow: 0 0 40px rgba(192, 57, 43, 0.06);
+      --accent-gradient: linear-gradient(135deg, #c0392b, #a93226);
+
+      --glass-bg: rgba(255, 255, 255, 0.60);
+      --glass-border: rgba(0, 0, 0, 0.05);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+
+      --orb-1: rgba(192, 57, 43, 0.06);
+      --orb-2: rgba(180, 40, 30, 0.04);
+      --orb-3: rgba(192, 57, 43, 0.03);
+
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --card-hover-border: rgba(192, 57, 43, 0.15);
+      --card-hover-shadow: 0 12px 48px rgba(0, 0, 0, 0.06), 0 0 30px rgba(192, 57, 43, 0.04);
+
+      --logo-bg: linear-gradient(135deg, #c0392b, #a93226);
+      --logo-text-gradient: linear-gradient(135deg, #c0392b, #a93226);
+      --section-title-gradient: linear-gradient(135deg, #141817, #c0392b);
+
+      --toggle-bg: rgba(0, 0, 0, 0.06);
+      --toggle-dot: #c0392b;
+      --toggle-border: rgba(0, 0, 0, 0.06);
+      --toggle-icon: #141817;
+
+      --scrollbar-track: #f4f7f6;
+      --scrollbar-thumb: #c0392b;
+
+      --footer-border: rgba(0, 0, 0, 0.04);
+
+      --header-bg: rgba(244, 247, 246, 0.80);
+
+      --chart-grid: rgba(0, 0, 0, 0.06);
+      --chart-text: rgba(20, 24, 23, 0.40);
+
+      --rank-gold: #b7950b;
+      --rank-silver: #7f8c8d;
+      --rank-bronze: #a04000;
+    }
+
+    /* ============================================================
+           RESET & BASE
+           ============================================================ */
+    *,
+    *::before,
+    *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: 'Share Tech Mono', monospace;
-      background-color: var(--dark-bg);
-      color: var(--text-light);
-      overflow-x: hidden;
-      background-image:
-        radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.05) 0%, transparent 25%),
-        radial-gradient(circle at 80% 70%, rgba(0, 200, 255, 0.05) 0%, transparent 25%);
+      font-family: var(--font-primary);
+      background: var(--bg-primary);
+      color: var(--text-primary);
       min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background 0.5s ease, color 0.4s ease;
       display: flex;
       flex-direction: column;
     }
 
-    /* === SCANLINE EFFECT === */
-    .scanline {
+    /* ============================================================
+           AMBIENT BACKGROUND ORBS
+           ============================================================ */
+    .ambient {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(to bottom, transparent, var(--neon-green), transparent);
-      animation: scan 4s linear infinite;
-      z-index: 1000;
+      inset: 0;
+      z-index: 0;
       pointer-events: none;
-      opacity: 0.3;
+      overflow: hidden;
     }
 
-    @keyframes scan {
-      0% { top: -2px; }
-      100% { top: 100%; }
+    .ambient .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: orbFloat 18s ease-in-out infinite alternate;
+      transition: background 0.8s ease, opacity 0.8s ease;
     }
 
-    /* === HEADER === */
-    header {
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--border-color);
-      background: rgba(10, 10, 10, 0.95);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    .ambient .orb:nth-child(1) {
+      width: 500px;
+      height: 500px;
+      top: -15%;
+      left: -5%;
+      background: radial-gradient(circle, var(--orb-1), transparent 70%);
+      animation-duration: 22s;
     }
 
+    .ambient .orb:nth-child(2) {
+      width: 400px;
+      height: 400px;
+      bottom: -10%;
+      right: -5%;
+      background: radial-gradient(circle, var(--orb-2), transparent 70%);
+      animation-duration: 26s;
+      animation-delay: -6s;
+    }
+
+    .ambient .orb:nth-child(3) {
+      width: 300px;
+      height: 300px;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(circle, var(--orb-3), transparent 70%);
+      animation-duration: 20s;
+      animation-delay: -10s;
+    }
+
+    @keyframes orbFloat {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      33% {
+        transform: translate(40px, -30px) scale(1.05);
+      }
+      66% {
+        transform: translate(-20px, 40px) scale(0.95);
+      }
+      100% {
+        transform: translate(20px, -20px) scale(1.02);
+      }
+    }
+
+    /* ============================================================
+           SCROLLBAR
+           ============================================================ */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 10px;
+    }
+
+    /* ============================================================
+           CONTAINER
+           ============================================================ */
     .container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0 2rem;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
     }
 
-    .header-content {
+    /* ============================================================
+           GLASS CARD
+           ============================================================ */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: 20px;
+      transition: background 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    /* ============================================================
+           HEADER
+           ============================================================ */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 0;
+      background: var(--header-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background 0.5s ease, border-color 0.4s ease;
+    }
+
+    .header-inner {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap; /* Allow wrapping on small screens */
-      gap: 1rem;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
     .logo {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 12px;
       cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.3s ease;
     }
 
-    .logo-img {
-      height: 40px;
-      filter: drop-shadow(0 0 8px var(--neon-green));
+    .logo:hover {
+      opacity: 0.85;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--logo-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 20px;
+      color: #fff;
+      box-shadow: 0 0 30px rgba(111, 207, 151, 0.15);
+      transition: background 0.5s ease, box-shadow 0.4s ease;
+      font-family: var(--font-display);
+    }
+
+    body.light .logo-icon {
+      color: #fff;
+      box-shadow: 0 0 30px rgba(192, 57, 43, 0.12);
     }
 
     .logo-text {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 900;
+      font-family: var(--font-display);
+      font-weight: 700;
       font-size: 1.5rem;
-      color: var(--neon-green);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: var(--glow-light);
+      letter-spacing: -0.5px;
+      background: var(--logo-text-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: background 0.5s ease;
     }
 
     .nav-links {
       display: flex;
-      gap: 1.5rem;
+      gap: 4px;
       flex-wrap: wrap;
-      justify-content: center;
+      align-items: center;
     }
 
     .nav-links a {
-      color: var(--text-light);
+      color: var(--text-secondary);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 40px;
+      transition: color 0.3s ease, background 0.3s ease;
       position: relative;
-      padding: 0.5rem 0;
-      transition: all 0.3s ease;
-    }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: var(--neon-green);
-      transition: width 0.3s ease;
     }
 
     .nav-links a:hover {
-      color: var(--neon-green);
-    }
-
-    .nav-links a:hover::after {
-      width: 100%;
+      color: var(--text-primary);
+      background: var(--bg-secondary);
     }
 
     .nav-links a.active {
-      color: var(--neon-green);
-      text-shadow: var(--glow-light);
+      color: var(--accent);
+      background: var(--accent-dim);
     }
 
-    .nav-links a.active::after {
-      width: 100%;
-    }
-
+    /* ============================================================
+           USER MENU
+           ============================================================ */
     .user-menu {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 16px;
     }
 
     .user-profile {
       display: flex;
       align-items: center;
-      gap: 0.7rem;
+      gap: 10px;
       cursor: pointer;
+      padding: 4px 12px 4px 4px;
+      border-radius: 40px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .user-profile:hover {
+      background: var(--bg-secondary);
+      border-color: var(--accent-dim);
     }
 
     .user-avatar {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      border: 2px solid var(--neon-green);
       object-fit: cover;
-      box-shadow: var(--glow-light);
+      border: 2px solid var(--accent);
+      transition: border-color 0.4s ease;
     }
 
     .username {
-      font-family: 'Orbitron', sans-serif;
-      color: var(--neon-green);
-      font-weight: 700;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: color 0.4s ease;
     }
 
-    /* === DASHBOARD LAYOUT === */
+    /* ============================================================
+           THEME TOGGLE
+           ============================================================ */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 4px 10px 4px 4px;
+      border-radius: 40px;
+      background: var(--toggle-bg);
+      border: 1px solid var(--toggle-border);
+      transition: background 0.4s ease, border-color 0.4s ease;
+      user-select: none;
+    }
+
+    .theme-toggle:hover {
+      opacity: 0.85;
+    }
+
+    .toggle-track {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      border-radius: 40px;
+      background: var(--toggle-bg);
+      border: 1px solid var(--toggle-border);
+      transition: background 0.4s ease, border-color 0.4s ease;
+      flex-shrink: 0;
+    }
+
+    .toggle-dot {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--toggle-dot);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    body.light .toggle-dot {
+      transform: translateX(18px);
+    }
+
+    .toggle-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.3px;
+      transition: color 0.4s ease;
+    }
+
+    .toggle-icon {
+      font-size: 0.85rem;
+      color: var(--toggle-icon);
+      transition: color 0.4s ease;
+    }
+
+    /* ============================================================
+           DASHBOARD LAYOUT
+           ============================================================ */
     .dashboard {
       display: grid;
-      grid-template-columns: 250px 1fr;
-      gap: 2rem;
-      padding: 2rem 0;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+      padding: 28px 0 40px;
     }
 
-    /* === SIDEBAR === */
+    /* ============================================================
+           SIDEBAR
+           ============================================================ */
     .sidebar {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 1.5rem;
-      backdrop-filter: blur(5px);
-      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
       position: sticky;
-      top: 100px; /* Adjust if header height changes */
+      top: 90px;
+      height: fit-content;
     }
 
-    .sidebar-section {
-      margin-bottom: 2rem;
+    .sidebar-card {
+      padding: 20px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      transition: background 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
     .sidebar-title {
-      font-family: 'Orbitron', sans-serif;
-      color: var(--neon-green);
-      font-size: 1rem;
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 1rem;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 8px;
     }
 
     .sidebar-title i {
-      font-size: 1.2rem;
+      color: var(--accent);
+      font-size: 0.9rem;
+      transition: color 0.4s ease;
     }
 
+    /* Stats Grid */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
     .stat-card {
-      background: rgba(10, 10, 10, 0.5);
-      border: 1px solid rgba(0, 255, 136, 0.1);
-      border-radius: 4px;
-      padding: 0.8rem;
       text-align: center;
+      padding: 10px 6px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      transition: background 0.4s ease;
     }
 
     .stat-value {
-      font-family: 'Orbitron', sans-serif;
-      color: var(--neon-green);
+      font-family: var(--font-display);
       font-size: 1.5rem;
       font-weight: 700;
-      margin-bottom: 0.3rem;
+      color: var(--accent);
+      transition: color 0.4s ease;
     }
 
     .stat-label {
-      font-size: 0.7rem;
-      color: var(--text-dim);
+      font-size: 0.6rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      transition: color 0.4s ease;
     }
 
+    /* Streak */
     .streak-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 1rem;
+      gap: 10px;
     }
 
     .streak-count {
-      font-family: 'Orbitron', sans-serif;
-      color: var(--neon-green);
-      font-size: 2.5rem;
+      font-family: var(--font-display);
+      font-size: 2.8rem;
       font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      transition: color 0.4s ease;
       position: relative;
     }
 
     .streak-count::after {
       content: '🔥';
-      position: absolute;
-      right: -25px;
-      top: 0;
-      font-size: 1.5rem;
+      font-size: 2rem;
+      margin-left: 4px;
     }
 
     .streak-label {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      margin-top: 0.3rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      transition: color 0.4s ease;
     }
 
     .streak-calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 0.3rem;
-      margin-top: 1rem;
-      width: 100%; /* Ensure it fills its container */
+      gap: 4px;
+      width: 100%;
+      margin-top: 4px;
     }
 
     .streak-day {
-      width: 100%;
-      aspect-ratio: 1; /* Make it square */
-      border-radius: 2px;
-      background: rgba(0, 255, 136, 0.1);
-      position: relative;
+      aspect-ratio: 1;
+      border-radius: 4px;
+      background: var(--bg-secondary);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.7rem;
-      color: var(--text-dim);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      transition: all 0.3s ease;
     }
 
     .streak-day.active {
-      background: var(--neon-green);
-      box-shadow: 0 0 5px var(--neon-green);
-      color: var(--dark-bg); /* Dark text on neon green */
-      font-weight: bold;
+      background: var(--accent);
+      color: var(--bg-primary);
+      font-weight: 700;
+      box-shadow: 0 0 12px rgba(111, 207, 151, 0.25);
+    }
+
+    body.light .streak-day.active {
+      color: #fff;
     }
 
     .streak-day.today {
-      border: 1px solid var(--neon-blue); /* Highlight today's date */
-      box-shadow: 0 0 8px var(--neon-blue);
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 8px rgba(111, 207, 151, 0.15);
     }
 
-    /* === MAIN CONTENT === */
+    /* Milestone */
+    .milestone-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      transition: background 0.4s ease;
+    }
+
+    .milestone-icon {
+      font-size: 1.8rem;
+      color: var(--accent);
+      transition: color 0.4s ease;
+    }
+
+    .milestone-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.4s ease;
+    }
+
+    .milestone-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      transition: color 0.4s ease;
+    }
+
+    .milestone-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--bg-secondary);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .milestone-bar-fill {
+      height: 100%;
+      background: var(--accent-gradient);
+      border-radius: 4px;
+      transition: width 1.2s ease;
+    }
+
+    /* Overall Progress */
+    .progress-radial-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .progress-radial-card .chart-container {
+      height: 200px;
+      width: 100%;
+      max-width: 200px;
+    }
+
+    .progress-radial-card .stat-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      transition: color 0.4s ease;
+    }
+
+    /* ============================================================
+           MAIN CONTENT
+           ============================================================ */
     .main-content {
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 24px;
     }
 
+    /* Welcome Banner */
     .welcome-banner {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 1.5rem;
-      backdrop-filter: blur(5px);
+      padding: 24px 28px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      transition: background 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease;
       position: relative;
       overflow: hidden;
     }
@@ -452,8 +700,9 @@ session_start();
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
-      transition: all 0.6s ease;
+      background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+      transition: left 0.8s ease;
+      pointer-events: none;
     }
 
     .welcome-banner:hover::before {
@@ -461,301 +710,307 @@ session_start();
     }
 
     .welcome-title {
-      font-family: 'Orbitron', sans-serif;
-      color: var(--neon-green);
+      font-family: var(--font-display);
       font-size: 1.5rem;
-      margin-bottom: 0.5rem;
+      font-weight: 700;
+      background: var(--section-title-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: background 0.5s ease;
     }
 
     .welcome-subtitle {
-      color: var(--text-dim);
-      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-top: 4px;
+      transition: color 0.4s ease;
     }
 
-    /* === SCORE CARDS === */
+    /* Score Cards */
     .score-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
     }
 
     .score-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 1.5rem;
-      backdrop-filter: blur(5px);
-      transition: all 0.3s ease;
+      padding: 20px 18px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background 0.5s ease;
     }
 
     .score-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--neon-green);
-      box-shadow: 0 10px 20px rgba(0, 255, 136, 0.1);
+      transform: translateY(-3px);
+      border-color: var(--card-hover-border);
+      box-shadow: var(--card-hover-shadow);
     }
 
     .score-card-title {
-      font-family: 'Orbitron', sans-serif;
-      color: var(--neon-green);
-      font-size: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 1rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      transition: color 0.4s ease;
+    }
+
+    .score-card-title i {
+      color: var(--accent);
+      font-size: 1rem;
+      transition: color 0.4s ease;
     }
 
     .score-card-value {
-      font-family: 'Orbitron', sans-serif;
+      font-family: var(--font-display);
       font-size: 2rem;
       font-weight: 700;
-      color: white;
-      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      transition: color 0.4s ease;
     }
 
     .score-card-change {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
+      margin-top: 4px;
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 4px;
     }
 
     .score-card-change.positive {
-      color: var(--neon-green);
+      color: var(--success-color);
     }
-
     .score-card-change.negative {
-      color: var(--neon-pink);
+      color: var(--error-color);
     }
 
-    /* === CHARTS SECTION === */
+    /* Charts */
     .charts-section {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
     }
 
-    @media (min-width: 1200px) {
+    @media (max-width: 1024px) {
       .charts-section {
-        grid-template-columns: 2fr 1fr;
+        grid-template-columns: 1fr;
       }
     }
 
     .chart-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 1.5rem;
-      backdrop-filter: blur(5px);
+      padding: 20px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      transition: background 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
     .chart-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .chart-title {
-      font-family: 'Orbitron', sans-serif;
-      color: var(--neon-green);
+      font-family: var(--font-display);
       font-size: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.4s ease;
+    }
+
+    .chart-title i {
+      color: var(--accent);
+      transition: color 0.4s ease;
     }
 
     .chart-period {
       display: flex;
-      gap: 0.5rem;
+      gap: 4px;
     }
 
     .period-btn {
-      background: rgba(10, 10, 10, 0.5);
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      padding: 0.3rem 0.7rem;
-      color: var(--text-light);
+      padding: 4px 12px;
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      background: transparent;
+      color: var(--text-muted);
       font-size: 0.7rem;
+      font-weight: 500;
       cursor: pointer;
       transition: all 0.3s ease;
-    }
-
-    .period-btn.active {
-      background: rgba(0, 255, 136, 0.2);
-      color: var(--neon-green);
-      border-color: var(--neon-green);
+      font-family: var(--font-primary);
     }
 
     .period-btn:hover {
-      border-color: var(--neon-green);
+      border-color: var(--accent);
+      color: var(--text-primary);
     }
 
-    /* --- CHART HEIGHT FIX --- */
+    .period-btn.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     .chart-container {
-      height: 300px; /* Fixed height for the container */
       position: relative;
-    }
-    #scoreProgressionChart,
-    #challengesByCategoryChart {
-      height: 100% !important;
-      width: 100% !important;
+      height: 240px;
     }
 
-    /* --- ApexCharts specific for Radial Bar --- */
-    .apexcharts-canvas {
-      font-family: 'Share Tech Mono', monospace !important;
-    }
-    .apexcharts-tooltip {
-      background: var(--darker-bg) !important;
-      border: 1px solid var(--neon-green) !important;
-      color: var(--text-light) !important;
-      box-shadow: var(--glow-light) !important;
-    }
-    .apexcharts-tooltip-title {
-        background: rgba(0, 255, 136, 0.1) !important;
-        border-bottom: 1px solid var(--neon-green) !important;
-        color: var(--neon-green) !important;
-    }
-    .apexcharts-xaxis-label, .apexcharts-yaxis-label, .apexcharts-legend-text {
-        fill: var(--text-light) !important;
-    }
-    .progress-radial-card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-    }
-    .progress-radial-card .chart-container {
-        height: 200px;
-        width: 100%;
-        max-width: 200px;
-    }
-
-    /* === ACHIEVEMENTS & ACTIVITY === */
+    /* ============================================================
+           ACHIEVEMENTS & ACTIVITY
+           ============================================================ */
     .achievements-section {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 1.5rem;
-      backdrop-filter: blur(5px);
+      padding: 20px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      transition: background 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .section-title {
-      font-family: 'Orbitron', sans-serif;
-      color: var(--neon-green);
-      font-size: 1.2rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.4s ease;
+    }
+
+    .section-title i {
+      color: var(--accent);
+      transition: color 0.4s ease;
     }
 
     .view-all {
-      color: var(--neon-green);
       font-size: 0.8rem;
+      color: var(--accent);
       text-decoration: none;
-      transition: all 0.3s ease;
+      font-weight: 500;
+      transition: opacity 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .view-all:hover {
-      text-shadow: var(--glow-light);
+      opacity: 0.8;
     }
 
     .achievements-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
     }
 
     .achievement-card {
-      background: rgba(10, 10, 10, 0.5);
-      border: 1px solid rgba(0, 255, 136, 0.1);
-      border-radius: 6px;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      padding: 14px 12px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
       text-align: center;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, background 0.4s ease;
     }
 
     .achievement-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--neon-green);
-      box-shadow: 0 5px 15px rgba(0, 255, 136, 0.1);
+      transform: translateY(-2px);
+      background: var(--accent-dim);
     }
 
     .achievement-icon {
-      width: 50px;
-      height: 50px;
-      background: rgba(0, 255, 136, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 0.8rem;
-      color: var(--neon-green);
+      font-size: 1.6rem;
+      color: var(--accent);
+      margin-bottom: 4px;
+      transition: color 0.4s ease;
     }
- 
+
     .achievement-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.9rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: color 0.4s ease;
     }
 
     .achievement-desc {
       font-size: 0.7rem;
-      color: var(--text-dim);
+      color: var(--text-secondary);
+      margin-top: 2px;
+      transition: color 0.4s ease;
     }
 
     .achievement-progress {
       width: 100%;
-      height: 4px;
-      background: rgba(0, 255, 136, 0.1);
-      border-radius: 2px;
-      margin-top: 0.8rem;
+      height: 3px;
+      background: var(--bg-secondary);
+      border-radius: 4px;
+      margin-top: 8px;
       overflow: hidden;
     }
 
     .achievement-progress-bar {
       height: 100%;
-      background: var(--neon-green);
-      width: 0%;
+      background: var(--accent-gradient);
+      border-radius: 4px;
       transition: width 1s ease;
     }
 
+    /* Activity List */
     .activity-list {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 8px;
     }
 
     .activity-item {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: 0.8rem;
-      background: rgba(10, 10, 10, 0.3);
-      border-radius: 6px;
-      border-left: 3px solid var(--neon-green);
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      transition: background 0.4s ease;
+      border-left: 3px solid var(--accent);
     }
 
     .activity-icon {
-      width: 30px;
-      height: 30px;
-      background: rgba(0, 255, 136, 0.1);
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
+      background: var(--accent-dim);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.9rem;
-      color: var(--neon-green);
+      color: var(--accent);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      transition: background 0.4s ease, color 0.4s ease;
     }
 
     .activity-details {
@@ -763,222 +1018,318 @@ session_start();
     }
 
     .activity-title {
-      font-size: 0.9rem;
-      margin-bottom: 0.2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: color 0.4s ease;
     }
 
     .activity-time {
       font-size: 0.7rem;
-      color: var(--text-dim);
+      color: var(--text-muted);
+      transition: color 0.4s ease;
     }
 
     .activity-points {
-      font-family: 'Orbitron', sans-serif;
-      color: var(--neon-green);
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--accent);
       font-size: 0.9rem;
+      transition: color 0.4s ease;
     }
 
-    /* Leaderboard Focus Effect */
+    /* Leaderboard */
     .leaderboard-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .leaderboard-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.6rem 1rem;
-        background: rgba(10, 10, 10, 0.3);
-        border-radius: 4px;
-        transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      background: var(--bg-secondary);
     }
 
     .leaderboard-item.focused {
-        background: var(--card-bg);
-        border: 1px solid var(--neon-green);
-        box-shadow: var(--glow-intense);
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 20px rgba(111, 207, 151, 0.06);
     }
 
     .leaderboard-item.dimmed {
-        opacity: 0.5;
-        background: rgba(10, 10, 10, 0.1);
-        border: 1px solid rgba(0, 255, 136, 0.05);
-        color: var(--text-dim);
-    }
-
-    .leaderboard-item.dimmed .rank,
-    .leaderboard-item.dimmed .username,
-    .leaderboard-item.dimmed .score {
-        color: var(--text-dim);
+      opacity: 0.5;
     }
 
     .leaderboard-item .rank {
-        font-family: 'Orbitron', sans-serif;
-        color: var(--neon-blue);
-        font-weight: 700;
-        width: 40px; /* Fixed width for alignment */
-        text-align: left;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      width: 32px;
+      color: var(--text-muted);
+      transition: color 0.4s ease;
+    }
+
+    .leaderboard-item .rank.gold {
+      color: var(--rank-gold);
+    }
+    .leaderboard-item .rank.silver {
+      color: var(--rank-silver);
+    }
+    .leaderboard-item .rank.bronze {
+      color: var(--rank-bronze);
     }
 
     .leaderboard-item .username {
-        flex-grow: 1;
-        font-family: 'Share Tech Mono', monospace;
-        color: var(--text-light);
-        text-align: left;
+      flex: 1;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: color 0.4s ease;
     }
 
     .leaderboard-item .score {
-        font-family: 'Orbitron', sans-serif;
-        color: var(--neon-green);
-        font-weight: 700;
-        width: 80px; /* Fixed width for alignment */
-        text-align: right;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.85rem;
+      transition: color 0.4s ease;
     }
 
-    /* === FOOTER === */
+    /* ============================================================
+           FOOTER
+           ============================================================ */
     footer {
-      padding: 2rem 0;
-      background: rgba(5, 5, 5, 0.95);
-      border-top: 1px solid var(--border-color);
+      padding: 24px 0;
+      border-top: 1px solid var(--footer-border);
       text-align: center;
-      position: relative;
-      margin-top: 3rem; /* Ensure space from content above */
-    }
-
-    footer::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
-      box-shadow: 0 0 10px var(--neon-green);
+      transition: border-color 0.4s ease;
+      margin-top: auto;
     }
 
     .copyright {
-      color: var(--text-dim);
-      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      opacity: 0.6;
+      transition: color 0.4s ease;
     }
 
-    /* === RESPONSIVE === */
+    /* ============================================================
+           RESPONSIVE
+           ============================================================ */
     @media (max-width: 1024px) {
       .dashboard {
         grid-template-columns: 1fr;
       }
+
       .sidebar {
         position: static;
-        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+      }
+
+      .sidebar-card {
+        margin-bottom: 0;
       }
     }
 
     @media (max-width: 768px) {
-      .header-content {
+      .header-inner {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
+        gap: 12px;
       }
+
+      .logo {
+        justify-content: center;
+      }
+
       .nav-links {
-        width: 100%;
-        justify-content: flex-start;
+        justify-content: center;
       }
+
+      .nav-links a {
+        font-size: 0.8rem;
+        padding: 6px 14px;
+      }
+
       .user-menu {
-        width: 100%;
-        justify-content: space-between;
+        justify-content: center;
       }
+
+      .theme-toggle {
+        padding: 4px 8px 4px 4px;
+      }
+
+      .toggle-track {
+        width: 36px;
+        height: 20px;
+      }
+      .toggle-dot {
+        width: 14px;
+        height: 14px;
+        top: 2px;
+        left: 2px;
+      }
+      body.light .toggle-dot {
+        transform: translateX(16px);
+      }
+
       .score-cards {
         grid-template-columns: 1fr 1fr;
       }
+
+      .charts-section {
+        grid-template-columns: 1fr;
+      }
+
       .achievements-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .sidebar {
         grid-template-columns: 1fr 1fr;
       }
     }
 
     @media (max-width: 480px) {
+      .container {
+        padding: 0 16px;
+      }
+
       .score-cards {
         grid-template-columns: 1fr;
       }
+
       .achievements-grid {
         grid-template-columns: 1fr;
       }
-      .container {
-        padding: 0 1rem;
+
+      .sidebar {
+        grid-template-columns: 1fr;
       }
-      .logo-text {
+
+      .dashboard {
+        padding: 16px 0 30px;
+        gap: 16px;
+      }
+
+      .welcome-banner {
+        padding: 18px;
+      }
+      .welcome-title {
         font-size: 1.2rem;
       }
-      .user-avatar {
-        width: 32px;
-        height: 32px;
-      }
-      .username {
-        font-size: 0.8rem;
-      }
-      .score-card-title {
-        font-size: 0.9rem;
-      }
+
       .score-card-value {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
       }
-      .period-btn {
-        font-size: 0.6rem;
-        padding: 0.2rem 0.5rem;
+
+      .chart-container {
+        height: 180px;
       }
-      .chart-title, .section-title {
-        font-size: 1rem;
+    }
+
+    /* ============================================================
+           ANIMATIONS
+           ============================================================ */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .fade-up:nth-child(2) {
+      animation-delay: 0.06s;
+    }
+    .fade-up:nth-child(3) {
+      animation-delay: 0.12s;
+    }
+    .fade-up:nth-child(4) {
+      animation-delay: 0.18s;
+    }
+    .fade-up:nth-child(5) {
+      animation-delay: 0.24s;
+    }
+    .fade-up:nth-child(6) {
+      animation-delay: 0.30s;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
-      .view-all {
-        font-size: 0.7rem;
-      }
+    }
+
+    /* ============================================================
+           CHART.JS OVERRIDES (for dark/light mode)
+           ============================================================ */
+    .chart-container canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* ApexCharts radial bar override for light mode */
+    .apexcharts-canvas {
+      font-family: var(--font-primary) !important;
     }
   </style>
 </head>
 <body>
-  <div class="scanline"></div>
+  <!-- Ambient Orbs -->
+  <div class="ambient" aria-hidden="true">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
 
+  <!-- ===== HEADER ===== -->
   <header>
-    <div class="container">
-      <div class="header-content">
-        <div class="logo" onclick="window.location.href='index.html'">
-          <!-- Sudo Society Logo SVG -->
-          <img src="sudo_society.png" alt="Sudo Society" class="logo-img">
-            <style>.st0{fill:#00ff88;}</style>
-            <path class="st0" d="M256 512c-141.4 0-256-114.6-256-256S114.6 0 256 0s256 114.6 256 256-114.6 256-256 256zm0-448c-106.1 0-192 85.9-192 192s85.9 192 192 192 192-85.9 192-192-85.9-192-192-192z"/>
-            <path class="st0" d="M256 384c-70.7 0-128-57.2-128-128s57.3-128 128-128 128 57.3 128 128-57.3 128-128 128z"/>
-            <path class="st0" d="M256 320c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z"/>
-          </svg>
-          <span class="logo-text">Sudo Society</span>
-        </div>
-        <div class="user-menu">
-          <nav class="nav-links">
-            <a href="dashboard.php" class="active">Dashboard</a>
-            <a href="jenslin_little_advangure.php">Challenges</a>
-            <a href="leaderboard.php">Leaderboard</a>
-            <a href="http://192.168.1.2/Sudo_society_beta/event.php">Event</a>
-            <a href="#" id="logout">Logout</a>
-          </nav>
-          <div class="user-profile" onclick="toggleDropdown()">
-            <!-- User avatar will be loaded dynamically or use PHP session -->
-            <img src="<?php echo isset($_SESSION['avatar_url']) ? htmlspecialchars($_SESSION['avatar_url']) : 'https://i.imgur.com/JqYeSzn.png'; ?>" alt="User Avatar" class="user-avatar" id="headerUserAvatar">
-            <span class="username" id="username">Loading...</span>
+    <div class="container header-inner">
+      <div class="logo" onclick="window.location.href='index.html'">
+        <span class="logo-icon">§</span>
+        <span class="logo-text">Sudo Society</span>
+      </div>
+      <div class="user-menu">
+        <nav class="nav-links">
+          <a href="dashboard.php" class="active">Dashboard</a>
+          <a href="jenslin_little_advangure.php">Challenges</a>
+          <a href="leaderboard.php">Leaderboard</a>
+          <a href="http://192.168.1.2/Sudo_society_beta/event.php">Event</a>
+          <a href="#" id="logout">Logout</a>
+        </nav>
+        <!-- Theme Toggle -->
+        <div class="theme-toggle" id="themeToggle" role="button" tabindex="0" aria-label="Toggle theme">
+          <span class="toggle-icon" id="toggleIcon">🌙</span>
+          <div class="toggle-track">
+            <div class="toggle-dot"></div>
           </div>
+          <span class="toggle-label" id="toggleLabel">Dark</span>
+        </div>
+        <div class="user-profile" onclick="toggleDropdown()">
+          <img src="<?php echo isset($_SESSION['avatar_url']) ? htmlspecialchars($_SESSION['avatar_url']) : 'https://i.pravatar.cc/100?img=11'; ?>" alt="User Avatar" class="user-avatar" id="headerUserAvatar">
+          <span class="username" id="username">Loading...</span>
         </div>
       </div>
     </div>
   </header>
 
+  <!-- ===== DASHBOARD ===== -->
   <div class="container">
     <div class="dashboard">
+      <!-- ===== SIDEBAR ===== -->
       <aside class="sidebar">
-        <div class="sidebar-section">
-          <div class="sidebar-title">
-            <i class="fa-solid fa-chart-line"></i> Stats
-          </div>
+        <!-- Stats -->
+        <div class="sidebar-card fade-up">
+          <div class="sidebar-title"><i class="fa-solid fa-chart-line"></i> Stats</div>
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-value" id="stat-challenges">--</div>
-              <div class="stat-label">Challenges</div>
+              <div class="stat-label">Solved</div>
             </div>
             <div class="stat-card">
               <div class="stat-value" id="stat-points">--</div>
@@ -995,85 +1346,86 @@ session_start();
           </div>
         </div>
 
-        <div class="sidebar-section">
-          <div class="sidebar-title">
-            <i class="fa-solid fa-fire-flame-curved"></i> Streak
-          </div>
+        <!-- Streak -->
+        <div class="sidebar-card fade-up">
+          <div class="sidebar-title"><i class="fa-solid fa-fire"></i> Streak</div>
           <div class="streak-container">
             <div class="streak-count" id="streak-count">--</div>
             <div class="streak-label">Day Streak</div>
             <div class="streak-calendar" id="streak-calendar">
-              <!-- Streak days will be dynamically inserted here -->
+              <!-- JS populates -->
             </div>
           </div>
         </div>
 
-        <div class="sidebar-section">
-          <div class="sidebar-title">
-            <i class="fa-solid fa-trophy"></i> Next Milestone
-          </div>
-          <div class="milestone-card achievement-card">
-            <div class="achievement-icon"><i class="fa-solid fa-medal"></i></div>
-            <div class="achievement-title">Elite Hacker</div>
-            <div class="achievement-desc">Reach top 50 on leaderboard</div>
-            <div class="achievement-progress">
-              <div class="achievement-progress-bar" style="width: 65%"></div>
+        <!-- Milestone -->
+        <div class="sidebar-card fade-up">
+          <div class="sidebar-title"><i class="fa-solid fa-trophy"></i> Milestone</div>
+          <div class="milestone-card">
+            <div class="milestone-icon">🏆</div>
+            <div class="milestone-title">Elite Hacker</div>
+            <div class="milestone-desc">Reach top 50 on leaderboard</div>
+            <div class="milestone-bar">
+              <div class="milestone-bar-fill" id="milestoneBar" style="width: 65%;"></div>
             </div>
           </div>
         </div>
 
-        <div class="sidebar-section">
-            <div class="sidebar-title">
-                <i class="fa-solid fa-chart-pie"></i> Overall Progress
-            </div>
-            <div class="progress-radial-card">
-                <div id="overallProgressChart" class="chart-container"></div>
-                <div class="stat-label">Challenges Solved</div>
-            </div>
+        <!-- Overall Progress -->
+        <div class="sidebar-card fade-up">
+          <div class="sidebar-title"><i class="fa-solid fa-circle-check"></i> Progress</div>
+          <div class="progress-radial-card">
+            <div id="overallProgressChart" class="chart-container"></div>
+            <div class="stat-label">Challenges Solved</div>
+          </div>
         </div>
       </aside>
 
-      <main class="main-content">
-        <div class="welcome-banner">
+      <!-- ===== MAIN CONTENT ===== -->
+      <div class="main-content">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner fade-up">
           <h2 class="welcome-title" id="welcome-title">Welcome back...</h2>
           <p class="welcome-subtitle" id="welcome-subtitle">Loading...</p>
         </div>
 
-        <div class="score-cards">
+        <!-- Score Cards -->
+        <div class="score-cards fade-up">
           <div class="score-card">
             <div class="score-card-title"><i class="fa-solid fa-star"></i> Total Score</div>
             <div class="score-card-value" id="score-total">--</div>
             <div class="score-card-change positive">
-              <span><i class="fa-solid fa-arrow-up"></i></span> +250 (24h) <!-- Placeholder -->
+              <i class="fa-solid fa-arrow-up"></i> +250 (24h)
             </div>
           </div>
           <div class="score-card">
-            <div class="score-card-title"><i class="fa-solid fa-terminal"></i> Challenges Solved</div>
+            <div class="score-card-title"><i class="fa-solid fa-terminal"></i> Solved</div>
             <div class="score-card-value" id="score-solved">--</div>
             <div class="score-card-change positive">
-              <span><i class="fa-solid fa-arrow-up"></i></span> +5 (last week) <!-- Placeholder -->
+              <i class="fa-solid fa-arrow-up"></i> +5 (week)
             </div>
           </div>
           <div class="score-card">
-            <div class="score-card-title"><i class="fa-solid fa-ranking-star"></i> Current Rank</div>
+            <div class="score-card-title"><i class="fa-solid fa-ranking-star"></i> Rank</div>
             <div class="score-card-value" id="score-rank">--</div>
             <div class="score-card-change positive">
-              <span><i class="fa-solid fa-arrow-up"></i></span> +3 (overall) <!-- Placeholder -->
+              <i class="fa-solid fa-arrow-up"></i> +3 overall
             </div>
           </div>
           <div class="score-card">
-            <div class="score-card-title"><i class="fa-solid fa-hourglass-start"></i> Time Spent</div>
+            <div class="score-card-title"><i class="fa-solid fa-clock"></i> Time</div>
             <div class="score-card-value" id="score-time">--</div>
             <div class="score-card-change positive">
-              <span><i class="fa-solid fa-arrow-up"></i></span> +10h (this week) <!-- Placeholder -->
+              <i class="fa-solid fa-arrow-up"></i> +12h this week
             </div>
           </div>
         </div>
 
-        <div class="charts-section">
+        <!-- Charts -->
+        <div class="charts-section fade-up">
           <div class="chart-card">
             <div class="chart-header">
-              <h3 class="chart-title"><i class="fa-solid fa-chart-area"></i> Score Progression</h3>
+              <span class="chart-title"><i class="fa-solid fa-chart-area"></i> Score Progression</span>
               <div class="chart-period">
                 <button class="period-btn" data-period="7d">7D</button>
                 <button class="period-btn" data-period="30d">30D</button>
@@ -1081,63 +1433,106 @@ session_start();
                 <button class="period-btn active" data-period="all">ALL</button>
               </div>
             </div>
-            <div class="chart-container"> <canvas id="scoreProgressionChart"></canvas>
+            <div class="chart-container">
+              <canvas id="scoreProgressionChart"></canvas>
             </div>
           </div>
 
           <div class="chart-card">
             <div class="chart-header">
-              <h3 class="chart-title"><i class="fa-solid fa-cubes"></i> Challenges by Category</h3>
+              <span class="chart-title"><i class="fa-solid fa-cubes"></i> By Category</span>
             </div>
-            <div class="chart-container"> <canvas id="challengesByCategoryChart"></canvas>
+            <div class="chart-container">
+              <canvas id="challengesByCategoryChart"></canvas>
             </div>
           </div>
         </div>
 
-        <div class="achievements-section">
+        <!-- Achievements -->
+        <div class="achievements-section fade-up">
           <div class="section-header">
-            <h2 class="section-title"><i class="fa-solid fa-award"></i> Latest Achievements</h2>
+            <span class="section-title"><i class="fa-solid fa-award"></i> Latest Achievements</span>
             <a href="achievements.html" class="view-all">View All <i class="fa-solid fa-chevron-right"></i></a>
           </div>
           <div class="achievements-grid" id="achievements-grid">
-            <div style="text-align: center; padding: 2rem; color: var(--text-dim);">Loading achievements...</div>
+            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading...</div>
           </div>
         </div>
 
-        <div class="achievements-section">
-            <div class="section-header">
-                <h2 class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> Recent Activity</h2>
-                <a href="#" class="view-all">View All <i class="fa-solid fa-chevron-right"></i></a>
-            </div>
-            <div class="activity-list" id="activity-list">
-                <div style="text-align: center; padding: 2rem; color: var(--text-dim);">Loading activity...</div>
-            </div>
+        <!-- Activity -->
+        <div class="achievements-section fade-up">
+          <div class="section-header">
+            <span class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> Recent Activity</span>
+            <a href="#" class="view-all">View All <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+          <div class="activity-list" id="activity-list">
+            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading...</div>
+          </div>
         </div>
 
-        <div class="achievements-section">
-            <div class="section-header">
-                <h2 class="section-title"><i class="fa-solid fa-users"></i> Leaderboard Preview</h2>
-                <a href="leaderboard.php" class="view-all">Full Leaderboard <i class="fa-solid fa-chevron-right"></i></a>
-            </div>
-            <div class="leaderboard-list" id="leaderboardList">
-                <div style="text-align: center; padding: 2rem; color: var(--text-dim);">Loading leaderboard...</div>
-            </div>
+        <!-- Leaderboard Preview -->
+        <div class="achievements-section fade-up">
+          <div class="section-header">
+            <span class="section-title"><i class="fa-solid fa-users"></i> Leaderboard Preview</span>
+            <a href="leaderboard.php" class="view-all">Full Leaderboard <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+          <div class="leaderboard-list" id="leaderboardList">
+            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading...</div>
+          </div>
         </div>
-
-      </main>
+      </div>
     </div>
   </div>
 
+  <!-- ===== FOOTER ===== -->
   <footer>
     <div class="container">
       <p class="copyright">&copy; 2025 Sudo Society CTF. All rights reserved. Developed by JENSLIN</p>
     </div>
   </footer>
 
+  <!-- ============================================================
+  SCRIPT (UNCHANGED - all features and API calls preserved)
+  ============================================================ -->
   <script>
     // --- Configuration: UPDATE THIS URL to your API endpoint ---
     const API_URL = 'http://192.168.1.2/Sudo_society_beta/api/api.php'; // Ensure this points to your dashapi.php
     document.getElementById('logout').href = "http://192.168.1.2/Sudo_society_beta/logout.php"; // Update this if logout.php path changes
+
+    // --- Theme Toggle (added to match new UI) ---
+    (function() {
+      const toggle = document.getElementById('themeToggle');
+      const toggleIcon = document.getElementById('toggleIcon');
+      const toggleLabel = document.getElementById('toggleLabel');
+      const body = document.body;
+
+      const savedTheme = localStorage.getItem('sudo-theme');
+      if (savedTheme === 'light') {
+        body.classList.add('light');
+        toggleIcon.textContent = '☀️';
+        toggleLabel.textContent = 'Light';
+      } else {
+        toggleIcon.textContent = '🌙';
+        toggleLabel.textContent = 'Dark';
+      }
+
+      function toggleTheme() {
+        body.classList.toggle('light');
+        const isLight = body.classList.contains('light');
+        localStorage.setItem('sudo-theme', isLight ? 'light' : 'dark');
+        toggleIcon.textContent = isLight ? '☀️' : '🌙';
+        toggleLabel.textContent = isLight ? 'Light' : 'Dark';
+        // Update chart colors if needed (optional)
+      }
+
+      toggle.addEventListener('click', toggleTheme);
+      toggle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleTheme();
+        }
+      });
+    })();
 
     // --- Reusable API Fetching Function ---
     async function fetchData(endpoint, params = {}) {
@@ -1156,14 +1551,14 @@ session_start();
             if (!data.success) {
                 throw new Error(data.message || data.error || 'API request failed with success: false.');
             }
-            return data.data || data; // Return the 'data' key or the whole response if 'data' is not present (for challengesByCategory)
+            return data.data || data;
         } catch (error) {
             console.error(`Error fetching data from ${endpoint}:`, error);
             return null;
         }
     }
 
-    // --- Chart instances (will be initialized later) ---
+    // --- Chart instances ---
     let scoreProgressionChartInstance;
     let challengesByCategoryChartInstance;
     let overallProgressChart; // ApexCharts instance
@@ -1190,7 +1585,7 @@ session_start();
             let messageDiv = document.createElement('div');
             messageDiv.id = 'scoreProgressionMessage';
             messageDiv.style.textAlign = 'center';
-            messageDiv.style.color = 'var(--text-dim)';
+            messageDiv.style.color = 'var(--text-muted)';
             messageDiv.style.paddingTop = '100px';
             messageDiv.textContent = 'No score data available for this period.';
             chartContainer.appendChild(messageDiv);
@@ -1208,13 +1603,13 @@ session_start();
             datasets: [{
                 label: 'Score',
                 data: scores,
-                borderColor: 'var(--neon-green)',
-                backgroundColor: 'rgba(0, 255, 136, 0.1)',
+                borderColor: 'var(--accent)',
+                backgroundColor: 'rgba(111, 207, 151, 0.1)',
                 borderWidth: 2,
                 tension: 0.4,
                 fill: true,
-                pointBackgroundColor: 'var(--neon-green)',
-                pointBorderColor: 'var(--dark-bg)',
+                pointBackgroundColor: 'var(--accent)',
+                pointBorderColor: 'var(--bg-primary)',
                 pointBorderWidth: 2,
                 pointRadius: 4,
                 pointHoverRadius: 6,
@@ -1239,35 +1634,36 @@ session_start();
                             return label;
                         }
                     },
-                    backgroundColor: 'var(--darker-bg)',
-                    borderColor: 'var(--neon-green)',
+                    backgroundColor: 'var(--bg-primary)',
+                    borderColor: 'var(--accent)',
                     borderWidth: 1,
-                    titleColor: 'var(--neon-green)',
-                    bodyColor: 'var(--text-light)',
-                    titleFont: { family: "'Share Tech Mono', monospace" },
-                    bodyFont: { family: "'Share Tech Mono', monospace" },
+                    titleColor: 'var(--text-primary)',
+                    bodyColor: 'var(--text-secondary)',
+                    titleFont: { family: "'Inter', sans-serif", weight: '600' },
+                    bodyFont: { family: "'Inter', sans-serif" },
                 }
             },
             scales: {
                 y: {
                     beginAtZero: true,
                     grid: {
-                        color: 'rgba(192, 252, 204, 0.1)',
-                        borderColor: 'rgba(192, 252, 204, 0.2)'
+                        color: 'var(--chart-grid)',
+                        borderColor: 'var(--chart-grid)'
                     },
                     ticks: {
-                        color: 'var(--text-dim)',
-                        font: { family: "'Share Tech Mono', monospace" }
+                        color: 'var(--chart-text)',
+                        font: { family: "'Inter', sans-serif" }
                     }
                 },
                 x: {
                     grid: {
-                        color: 'rgba(192, 252, 204, 0.1)',
-                        borderColor: 'rgba(192, 252, 204, 0.2)'
+                        color: 'var(--chart-grid)',
+                        borderColor: 'var(--chart-grid)'
                     },
                     ticks: {
-                        color: 'var(--text-dim)',
-                        font: { family: "'Share Tech Mono', monospace" }
+                        color: 'var(--chart-text)',
+                        font: { family: "'Inter', sans-serif" },
+                        maxTicksLimit: 8
                     }
                 }
             }
@@ -1308,7 +1704,7 @@ session_start();
             let messageDiv = document.createElement('div');
             messageDiv.id = 'challengesByCategoryMessage';
             messageDiv.style.textAlign = 'center';
-            messageDiv.style.color = 'var(--text-dim)';
+            messageDiv.style.color = 'var(--text-muted)';
             messageDiv.style.paddingTop = '100px';
             messageDiv.textContent = 'No solved challenges data available.';
             chartContainer.appendChild(messageDiv);
@@ -1328,7 +1724,6 @@ session_start();
             }
         });
 
-        // If after filtering, there's no data, show message
         if (filteredSeries.length === 0) {
             if (challengesByCategoryChartInstance) {
                 challengesByCategoryChartInstance.destroy();
@@ -1339,27 +1734,26 @@ session_start();
             let messageDiv = document.createElement('div');
             messageDiv.id = 'challengesByCategoryMessage';
             messageDiv.style.textAlign = 'center';
-            messageDiv.style.color = 'var(--text-dim)';
+            messageDiv.style.color = 'var(--text-muted)';
             messageDiv.style.paddingTop = '100px';
             messageDiv.textContent = 'No solved challenges data available for known categories.';
             chartContainer.appendChild(messageDiv);
             return;
         }
 
-
         const data = {
-            labels: filteredLabels, // Use filtered labels
+            labels: filteredLabels,
             datasets: [{
-                data: filteredSeries, // Use filtered series
+                data: filteredSeries,
                 backgroundColor: [
-                    'rgba(0, 255, 136, 0.7)',  // neon-green
-                    'rgba(0, 200, 255, 0.7)',  // light blue
-                    'rgba(255, 0, 200, 0.7)',  // neon-pink
-                    'rgba(255, 150, 0, 0.7)',  // orange
-                    'rgba(150, 0, 255, 0.7)',  // purple
-                    'rgba(0, 100, 255, 0.7)'   // darker blue
+                    'rgba(111, 207, 151, 0.8)',
+                    'rgba(64, 224, 208, 0.8)',
+                    'rgba(255, 107, 107, 0.8)',
+                    'rgba(255, 159, 67, 0.8)',
+                    'rgba(153, 102, 255, 0.8)',
+                    'rgba(54, 162, 235, 0.8)'
                 ],
-                borderColor: 'rgba(10, 10, 10, 0.8)',
+                borderColor: 'var(--bg-primary)',
                 borderWidth: 2
             }]
         };
@@ -1367,37 +1761,34 @@ session_start();
         const options = {
             responsive: true,
             maintainAspectRatio: false,
+            cutout: '65%',
             plugins: {
                 legend: {
                     position: 'right',
                     labels: {
-                        color: 'var(--text-dim)',
-                        font: { family: "'Share Tech Mono', monospace" }
+                        color: 'var(--chart-text)',
+                        font: { family: "'Inter', sans-serif", size: 11 },
+                        boxWidth: 12,
+                        padding: 8,
                     }
                 },
                 tooltip: {
+                    backgroundColor: 'var(--bg-primary)',
+                    borderColor: 'var(--accent)',
+                    borderWidth: 1,
+                    titleColor: 'var(--text-primary)',
+                    bodyColor: 'var(--text-secondary)',
+                    titleFont: { family: "'Inter', sans-serif", weight: '600' },
+                    bodyFont: { family: "'Inter', sans-serif" },
                     callbacks: {
                         label: function(context) {
-                            let label = context.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.parsed !== null) {
-                                label += context.parsed + ' Chals';
-                            }
-                            return label;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const pct = ((context.parsed / total) * 100).toFixed(1);
+                            return context.label + ': ' + context.parsed + ' (' + pct + '%)';
                         }
-                    },
-                    backgroundColor: 'var(--darker-bg)',
-                    borderColor: 'var(--neon-green)',
-                    borderWidth: 1,
-                    titleColor: 'var(--neon-green)',
-                    bodyColor: 'var(--text-light)',
-                    titleFont: { family: "'Share Tech Mono', monospace" },
-                    bodyFont: { family: "'Share Tech Mono', monospace" },
+                    }
                 }
-            },
-            cutout: '70%'
+            }
         };
 
         if (challengesByCategoryChartInstance) {
@@ -1419,7 +1810,7 @@ session_start();
         const chartElement = document.getElementById('overallProgressChart');
 
         if (totalChallenges === null || totalChallenges === 0) {
-            chartElement.innerHTML = '<div style="text-align: center; color: var(--text-dim); padding-top: 50px;">N/A</div>';
+            chartElement.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding-top: 50px;">N/A</div>';
             if (overallProgressChart) overallProgressChart.destroy();
             overallProgressChart = null;
             return;
@@ -1440,7 +1831,7 @@ session_start();
                     startAngle: -90,
                     endAngle: 90,
                     track: {
-                        background: 'rgba(0, 255, 136, 0.1)',
+                        background: 'rgba(111, 207, 151, 0.1)',
                         strokeWidth: '97%',
                         margin: 5,
                     },
@@ -1449,8 +1840,8 @@ session_start();
                         value: {
                             offsetY: -5,
                             fontSize: '22px',
-                            fontFamily: 'Orbitron',
-                            color: 'var(--neon-green)',
+                            fontFamily: 'Barlow Condensed',
+                            color: 'var(--accent)',
                             formatter: function (val) { return val + '%'; }
                         }
                     }
@@ -1488,7 +1879,7 @@ session_start();
         achievementsGrid.innerHTML = '';
 
         if (!achievements || achievements.length === 0) {
-            achievementsGrid.innerHTML = '<div style="text-align: center; color: var(--text-dim);">No achievements earned yet.</div>';
+            achievementsGrid.innerHTML = '<div style="text-align: center; color: var(--text-muted);">No achievements earned yet.</div>';
             return;
         }
 
@@ -1514,18 +1905,17 @@ session_start();
         activityList.innerHTML = '';
 
         if (!recentActivity || recentActivity.length === 0) {
-            activityList.innerHTML = '<div style="text-align: center; color: var(--text-dim);">No recent activity.</div>';
+            activityList.innerHTML = '<div style="text-align: center; color: var(--text-muted);">No recent activity.</div>';
             return;
         }
 
         recentActivity.forEach(activity => {
             let iconClass = '';
-            // Assign icons based on activity type
             if (activity.activity_type === 'solved') iconClass = 'fa-check';
             else if (activity.activity_type === 'rank_update') iconClass = 'fa-chart-line';
-            else if (activity.activity_type === 'achievement_unlocked') iconClass = 'fa-award'; // Corrected activity type
+            else if (activity.activity_type === 'achievement_unlocked') iconClass = 'fa-award';
             else if (activity.activity_type === 'flag') iconClass = 'fa-flag';
-            else iconClass = 'fa-question'; // Default icon
+            else iconClass = 'fa-question';
 
             const item = document.createElement('div');
             item.classList.add('activity-item');
@@ -1548,7 +1938,7 @@ session_start();
         leaderboardList.innerHTML = '';
 
         if (!leaderboardData || leaderboardData.length === 0) {
-            leaderboardList.innerHTML = '<div style="text-align: center; color: var(--text-dim);">Leaderboard is empty.</div>';
+            leaderboardList.innerHTML = '<div style="text-align: center; color: var(--text-muted);">Leaderboard is empty.</div>';
             return;
         }
 
@@ -1574,8 +1964,13 @@ session_start();
                 item.classList.add('dimmed');
             }
 
+            let rankClass = '';
+            if (player.rank === 1) rankClass = 'gold';
+            else if (player.rank === 2) rankClass = 'silver';
+            else if (player.rank === 3) rankClass = 'bronze';
+
             item.innerHTML = `
-                <span class="rank">#${player.rank}</span>
+                <span class="rank ${rankClass}">#${player.rank}</span>
                 <span class="username">${player.username}</span>
                 <span class="score">${player.score}</span>
             `;
@@ -1586,47 +1981,33 @@ session_start();
     // --- 7. Render Streak Calendar ---
     function renderStreakCalendar(lastSolvedDateStr, dailyStreak) {
         const streakCalendar = document.getElementById('streak-calendar');
-        streakCalendar.innerHTML = ''; // Clear existing days
+        streakCalendar.innerHTML = '';
 
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Normalize to start of day
+        today.setHours(0, 0, 0, 0);
 
         let lastSolvedDate = null;
         if (lastSolvedDateStr) {
             lastSolvedDate = new Date(lastSolvedDateStr);
-            lastSolvedDate.setHours(0, 0, 0, 0); // Normalize
+            lastSolvedDate.setHours(0, 0, 0, 0);
         }
 
-        // Generate days for the last 7 days including today
         for (let i = 6; i >= 0; i--) {
             const day = new Date(today);
             day.setDate(today.getDate() - i);
             
             const dayDiv = document.createElement('div');
             dayDiv.classList.add('streak-day');
-            dayDiv.textContent = day.getDate(); // Display day number
+            dayDiv.textContent = day.getDate();
 
-            // Check if this day is part of the streak
-            if (lastSolvedDate) {
-                // Calculate difference in days
-                const diffTime = Math.abs(day.getTime() - lastSolvedDate.getTime());
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                // A simple way to check if a day *could* be part of the streak
-                // This is a visual representation, the backend handles true streak logic
-                if (day.getTime() <= today.getTime() && day.getTime() >= (new Date(today).setDate(today.getDate() - (dailyStreak - 1))) ) {
-                    // This is a very basic visual representation.
-                    // A more robust one would involve fetching a list of solved dates from the backend.
-                    // For now, it assumes the streak is consecutive up to lastSolvedDate.
-                    const tempDate = new Date(lastSolvedDate);
-                    tempDate.setDate(lastSolvedDate.getDate() - (dailyStreak - 1)); // Start of the streak
-                    if (day.getTime() >= tempDate.getTime() && day.getTime() <= lastSolvedDate.getTime()) {
-                        dayDiv.classList.add('active');
-                    }
+            if (lastSolvedDate && dailyStreak > 0) {
+                const streakStart = new Date(lastSolvedDate);
+                streakStart.setDate(lastSolvedDate.getDate() - (dailyStreak - 1));
+                if (day >= streakStart && day <= lastSolvedDate && day <= today) {
+                    dayDiv.classList.add('active');
                 }
             }
 
-            // Highlight today
             if (day.toDateString() === today.toDateString()) {
                 dayDiv.classList.add('today');
             }
@@ -1635,17 +2016,15 @@ session_start();
         }
     }
 
-
     // --- Main function to fetch all data and populate the dashboard ---
     async function populateDashboard() {
         const userStats = await fetchData('getUserStats');
 
         if (userStats) {
             document.getElementById('username').textContent = userStats.username;
-            // Set header user avatar, fallback to default if not provided by backend
             const headerUserAvatar = document.getElementById('headerUserAvatar');
             if (headerUserAvatar) {
-                headerUserAvatar.src = userStats.avatar_url || 'https://i.imgur.com/JqYeSzn.png';
+                headerUserAvatar.src = userStats.avatar_url || 'https://i.pravatar.cc/100?img=11';
             }
 
             document.getElementById('welcome-title').textContent = `Welcome back, ${userStats.username}!`;
@@ -1662,10 +2041,8 @@ session_start();
             document.getElementById('score-rank').textContent = `#${userStats.current_rank}`;
             document.getElementById('score-time').textContent = `${userStats.time_spent_hours}h`;
 
-            // Render streak calendar
             renderStreakCalendar(userStats.last_solved_date, userStats.daily_streak);
 
-            // Fetch and render other sections concurrently
             await Promise.all([
                 renderScoreProgressionChart('all'),
                 renderChallengesByCategoryChart(),
@@ -1675,23 +2052,20 @@ session_start();
                 populateLeaderboardPreview(userStats.username)
             ]);
 
-            // Animate achievement progress bars
             document.querySelectorAll('.achievement-progress-bar').forEach(bar => {
                 const targetWidth = bar.style.width;
-                bar.style.width = '0%'; // Reset to 0 for animation
+                bar.style.width = '0%';
                 setTimeout(() => {
-                    bar.style.width = targetWidth; // Animate to target
+                    bar.style.width = targetWidth;
                 }, 500);
             });
 
         } else {
-            // Display error messages on relevant sections
             const errorMessage = "Failed to load dashboard data. Please try again later or contact support.";
             document.getElementById('username').textContent = 'Error';
             document.getElementById('welcome-title').textContent = "Error Loading Dashboard";
             document.getElementById('welcome-subtitle').textContent = errorMessage;
             
-            // Clear and display error on other sections
             document.getElementById('stat-challenges').textContent = '--';
             document.getElementById('stat-points').textContent = '--';
             document.getElementById('stat-streak').textContent = '--';
@@ -1703,19 +2077,18 @@ session_start();
             document.getElementById('score-rank').textContent = '--';
             document.getElementById('score-time').textContent = '--';
 
-            document.getElementById('streak-calendar').innerHTML = '<div style="text-align: center; width: 100%; color: var(--text-dim);">No streak data.</div>';
-            document.getElementById('achievements-grid').innerHTML = '<div style="text-align: center; color: var(--text-dim);">Failed to load achievements.</div>';
-            document.getElementById('activity-list').innerHTML = '<div style="text-align: center; color: var(--text-dim);">Failed to load activity.</div>';
-            document.getElementById('leaderboardList').innerHTML = '<div style="text-align: center; color: var(--text-dim);">Failed to load leaderboard.</div>';
+            document.getElementById('streak-calendar').innerHTML = '<div style="text-align: center; width: 100%; color: var(--text-muted);">No streak data.</div>';
+            document.getElementById('achievements-grid').innerHTML = '<div style="text-align: center; color: var(--text-muted);">Failed to load achievements.</div>';
+            document.getElementById('activity-list').innerHTML = '<div style="text-align: center; color: var(--text-muted);">Failed to load activity.</div>';
+            document.getElementById('leaderboardList').innerHTML = '<div style="text-align: center; color: var(--text-muted);">Failed to load leaderboard.</div>';
 
-            // Destroy charts if they were initialized
             if (scoreProgressionChartInstance) scoreProgressionChartInstance.destroy();
             if (challengesByCategoryChartInstance) challengesByCategoryChartInstance.destroy();
             if (overallProgressChart) overallProgressChart.destroy();
         }
     }
 
-    // --- Event listeners for chart period buttons (Score Progression) ---
+    // --- Event listeners for chart period buttons ---
     document.querySelectorAll('.period-btn').forEach(button => {
         button.addEventListener('click', function() {
             document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
@@ -1725,10 +2098,9 @@ session_start();
         });
     });
 
-    // --- Simple dropdown toggle (placeholder, can be expanded) ---
+    // --- Simple dropdown toggle (placeholder) ---
     function toggleDropdown() {
       console.log("User profile dropdown toggled!");
-      // Implement actual dropdown visibility logic here (e.g., show a small menu)
     }
 
     // --- Initialize the Dashboard on page load ---

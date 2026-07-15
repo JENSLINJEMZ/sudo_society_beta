@@ -1,302 +1,1221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register | Sudo Society CTF</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/register.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register | Sudo Society CTF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* ============================================================
+                   CSS VARIABLES (DARK MODE DEFAULT)
+                   ============================================================ */
+        :root {
+            --bg-primary: #0b0d0e;
+            --bg-secondary: rgba(255, 255, 255, 0.03);
+            --text-primary: #f0f5f3;
+            --text-secondary: rgba(240, 245, 243, 0.70);
+            --text-muted: rgba(240, 245, 243, 0.40);
+
+            --accent: #6fcf97;
+            --accent-dim: rgba(111, 207, 151, 0.12);
+            --accent-glow: 0 0 40px rgba(111, 207, 151, 0.10);
+            --accent-gradient: linear-gradient(135deg, #6fcf97, #27ae60);
+
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
+
+            --orb-1: rgba(111, 207, 151, 0.12);
+            --orb-2: rgba(46, 204, 113, 0.08);
+            --orb-3: rgba(111, 207, 151, 0.06);
+
+            --border-subtle: rgba(255, 255, 255, 0.04);
+            --input-bg: rgba(255, 255, 255, 0.04);
+            --input-border: rgba(255, 255, 255, 0.08);
+            --input-focus: rgba(111, 207, 151, 0.25);
+
+            --btn-primary-bg: linear-gradient(135deg, #6fcf97, #27ae60);
+            --btn-primary-color: #0b0d0e;
+            --btn-primary-shadow: 0 4px 24px rgba(111, 207, 151, 0.25);
+
+            --logo-bg: linear-gradient(135deg, #6fcf97, #27ae60);
+            --logo-text-gradient: linear-gradient(135deg, #6fcf97, #27ae60);
+
+            --toggle-bg: rgba(255, 255, 255, 0.08);
+            --toggle-dot: #6fcf97;
+            --toggle-border: rgba(255, 255, 255, 0.08);
+            --toggle-icon: #f0f5f3;
+
+            --scrollbar-track: #0b0d0e;
+            --scrollbar-thumb: #6fcf97;
+
+            --footer-border: rgba(255, 255, 255, 0.04);
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'Barlow Condensed', 'Inter', sans-serif;
+
+            --header-bg: rgba(11, 13, 14, 0.70);
+        }
+
+        /* ============================================================
+                   LIGHT MODE
+                   ============================================================ */
+        body.light {
+            --bg-primary: #f4f7f6;
+            --bg-secondary: rgba(0, 0, 0, 0.02);
+            --text-primary: #141817;
+            --text-secondary: rgba(20, 24, 23, 0.72);
+            --text-muted: rgba(20, 24, 23, 0.45);
+
+            --accent: #c0392b;
+            --accent-dim: rgba(192, 57, 43, 0.08);
+            --accent-glow: 0 0 40px rgba(192, 57, 43, 0.06);
+            --accent-gradient: linear-gradient(135deg, #c0392b, #a93226);
+
+            --glass-bg: rgba(255, 255, 255, 0.60);
+            --glass-border: rgba(0, 0, 0, 0.05);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+
+            --orb-1: rgba(192, 57, 43, 0.06);
+            --orb-2: rgba(180, 40, 30, 0.04);
+            --orb-3: rgba(192, 57, 43, 0.03);
+
+            --border-subtle: rgba(0, 0, 0, 0.04);
+            --input-bg: rgba(0, 0, 0, 0.02);
+            --input-border: rgba(0, 0, 0, 0.08);
+            --input-focus: rgba(192, 57, 43, 0.15);
+
+            --btn-primary-bg: linear-gradient(135deg, #c0392b, #a93226);
+            --btn-primary-color: #ffffff;
+            --btn-primary-shadow: 0 4px 24px rgba(192, 57, 43, 0.20);
+
+            --logo-bg: linear-gradient(135deg, #c0392b, #a93226);
+            --logo-text-gradient: linear-gradient(135deg, #c0392b, #a93226);
+
+            --toggle-bg: rgba(0, 0, 0, 0.06);
+            --toggle-dot: #c0392b;
+            --toggle-border: rgba(0, 0, 0, 0.06);
+            --toggle-icon: #141817;
+
+            --scrollbar-track: #f4f7f6;
+            --scrollbar-thumb: #c0392b;
+
+            --footer-border: rgba(0, 0, 0, 0.04);
+            --error-color: #c0392b;
+            --success-color: #27ae60;
+
+            --header-bg: rgba(244, 247, 246, 0.80);
+        }
+
+        /* ============================================================
+                   RESET & BASE
+                   ============================================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background 0.5s ease, color 0.4s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ============================================================
+                   AMBIENT BACKGROUND ORBS
+                   ============================================================ */
+        .ambient {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .ambient .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: orbFloat 18s ease-in-out infinite alternate;
+            transition: background 0.8s ease, opacity 0.8s ease;
+        }
+
+        .ambient .orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            top: -15%;
+            left: -5%;
+            background: radial-gradient(circle, var(--orb-1), transparent 70%);
+            animation-duration: 22s;
+        }
+
+        .ambient .orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            bottom: -10%;
+            right: -5%;
+            background: radial-gradient(circle, var(--orb-2), transparent 70%);
+            animation-duration: 26s;
+            animation-delay: -6s;
+        }
+
+        .ambient .orb:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(circle, var(--orb-3), transparent 70%);
+            animation-duration: 20s;
+            animation-delay: -10s;
+        }
+
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(40px, -30px) scale(1.05);
+            }
+            66% {
+                transform: translate(-20px, 40px) scale(0.95);
+            }
+            100% {
+                transform: translate(20px, -20px) scale(1.02);
+            }
+        }
+
+        /* ============================================================
+                   SCROLLBAR
+                   ============================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 10px;
+        }
+
+        /* ============================================================
+                   CONTAINER
+                   ============================================================ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============================================================
+                   HEADER
+                   ============================================================ */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 14px 0;
+            background: var(--header-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: background 0.5s ease, border-color 0.4s ease;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.85;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--logo-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 20px;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(111, 207, 151, 0.15);
+            transition: background 0.5s ease, box-shadow 0.4s ease;
+            font-family: var(--font-display);
+        }
+
+        body.light .logo-icon {
+            color: #fff;
+            box-shadow: 0 0 30px rgba(192, 57, 43, 0.12);
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+            background: var(--logo-text-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: background 0.5s ease;
+        }
+
+        nav {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 40px;
+            transition: color 0.3s ease, background 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        nav a.active {
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        /* ============================================================
+                   THEME TOGGLE
+                   ============================================================ */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 4px 10px 4px 4px;
+            border-radius: 40px;
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            transition: background 0.4s ease, border-color 0.4s ease;
+            user-select: none;
+            margin-left: 4px;
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.85;
+        }
+
+        .toggle-track {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            border-radius: 40px;
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            transition: background 0.4s ease, border-color 0.4s ease;
+            flex-shrink: 0;
+        }
+
+        .toggle-dot {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--toggle-dot);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        body.light .toggle-dot {
+            transform: translateX(18px);
+        }
+
+        .toggle-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.3px;
+            transition: color 0.4s ease;
+        }
+
+        .toggle-icon {
+            font-size: 0.85rem;
+            color: var(--toggle-icon);
+            transition: color 0.4s ease;
+        }
+
+        /* ============================================================
+                   REGISTER SECTION
+                   ============================================================ */
+        .register-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 0 80px;
+            min-height: calc(100vh - 140px);
+        }
+
+        .register-box {
+            max-width: 480px;
+            width: 100%;
+            padding: 40px 36px 36px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+            transition: background 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, var(--accent-dim), transparent 60%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            transition: background 0.5s ease;
+        }
+
+        .register-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-align: center;
+            margin-bottom: 6px;
+            background: var(--section-title-gradient, var(--logo-text-gradient));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: background 0.5s ease;
+        }
+
+        .register-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+            transition: color 0.4s ease;
+        }
+
+        .register-subtitle a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .register-subtitle a:hover {
+            opacity: 0.8;
+        }
+
+        /* ============================================================
+                   MESSAGE BOX
+                   ============================================================ */
+        .message-box {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .message-box.success {
+            display: block;
+            background: rgba(46, 204, 113, 0.12);
+            border: 1px solid rgba(46, 204, 113, 0.20);
+            color: #2ecc71;
+        }
+
+        .message-box.error {
+            display: block;
+            background: rgba(231, 76, 60, 0.12);
+            border: 1px solid rgba(231, 76, 60, 0.20);
+            color: #e74c3c;
+        }
+
+        body.light .message-box.success {
+            background: rgba(46, 204, 113, 0.08);
+            color: #1a8c4a;
+        }
+
+        body.light .message-box.error {
+            background: rgba(192, 57, 43, 0.08);
+            color: #a93226;
+        }
+
+        /* ============================================================
+                   FORM
+                   ============================================================ */
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            transition: color 0.4s ease;
+        }
+
+        .form-group .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: var(--font-primary);
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.4s ease, color 0.4s ease;
+            outline: none;
+        }
+
+        .form-group .form-control::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        .form-group .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--input-focus);
+        }
+
+        .form-group .form-control.error {
+            border-color: var(--error-color);
+            box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.12);
+        }
+
+        .form-group .form-control.success {
+            border-color: var(--success-color);
+        }
+
+        .form-group .error-message {
+            display: none;
+            font-size: 0.75rem;
+            color: var(--error-color);
+            margin-top: 4px;
+            transition: color 0.4s ease;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        /* ============================================================
+                   CHECKBOX
+                   ============================================================ */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 22px;
+            margin-top: 4px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 3px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            flex-shrink: 0;
+            border-radius: 4px;
+            transition: accent-color 0.4s ease;
+        }
+
+        .checkbox-group label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.4s ease;
+        }
+
+        .checkbox-group label a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .checkbox-group label a:hover {
+            opacity: 0.8;
+        }
+
+        .checkbox-group .error-message {
+            display: none;
+            font-size: 0.75rem;
+            color: var(--error-color);
+            margin-top: 4px;
+            transition: color 0.4s ease;
+        }
+
+        .checkbox-group.error .error-message {
+            display: block;
+        }
+
+        /* ============================================================
+                   BUTTON
+                   ============================================================ */
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 60px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-color);
+            box-shadow: var(--btn-primary-shadow);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.4s ease, color 0.4s ease, opacity 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 8px 40px rgba(111, 207, 151, 0.35);
+        }
+
+        body.light .submit-btn:hover:not(:disabled) {
+            box-shadow: 0 8px 40px rgba(192, 57, 43, 0.25);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.10), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .submit-btn .btn-loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto;
+        }
+
+        .submit-btn.loading .btn-loader {
+            display: block;
+        }
+        .submit-btn.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ============================================================
+                   LOGIN LINK
+                   ============================================================ */
+        .login-link {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: color 0.4s ease;
+        }
+
+        .login-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            opacity: 0.8;
+        }
+
+        /* ============================================================
+                   FOOTER
+                   ============================================================ */
+        footer {
+            padding: 24px 0;
+            border-top: 1px solid var(--footer-border);
+            text-align: center;
+            transition: border-color 0.4s ease;
+            margin-top: auto;
+        }
+
+        .footer-copy {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            opacity: 0.6;
+            transition: color 0.4s ease;
+        }
+
+        /* ============================================================
+                   RESPONSIVE
+                   ============================================================ */
+        @media (max-width: 768px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .logo {
+                justify-content: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            nav a {
+                font-size: 0.8rem;
+                padding: 6px 14px;
+            }
+
+            .theme-toggle {
+                padding: 4px 8px 4px 4px;
+            }
+
+            .toggle-track {
+                width: 36px;
+                height: 20px;
+            }
+
+            .toggle-dot {
+                width: 14px;
+                height: 14px;
+                top: 2px;
+                left: 2px;
+            }
+
+            body.light .toggle-dot {
+                transform: translateX(16px);
+            }
+
+            .register-section {
+                padding: 40px 0 60px;
+                min-height: calc(100vh - 120px);
+            }
+
+            .register-box {
+                padding: 28px 20px 24px;
+            }
+
+            .register-title {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .register-box {
+                padding: 24px 16px 20px;
+                border-radius: 16px;
+            }
+
+            .register-title {
+                font-size: 1.4rem;
+            }
+
+            .form-group .form-control {
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+
+            .submit-btn {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+
+        /* ============================================================
+                   ANIMATIONS
+                   ============================================================ */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.7s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pulse-ring {
+            position: relative;
+        }
+
+        .pulse-ring::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 60px;
+            border: 1px solid rgba(111, 207, 151, 0.12);
+            animation: ringPulse 2s ease-out infinite;
+            pointer-events: none;
+            transition: border-color 0.4s ease;
+        }
+
+        body.light .pulse-ring::after {
+            border-color: rgba(192, 57, 43, 0.12);
+        }
+
+        @keyframes ringPulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.10);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="scanline"></div>
 
-  <header>
-    <div class="container">
-      <div class="header-content">
-        <div class="logo" onclick="window.location.href='index.html'">
-          <img src="sudo_society.png" alt="Sudo Society Logo" class="logo-img">
-          <span class="logo-text">Sudo Society</span>
-        </div>
-      </div>
+    <!-- ===== AMBIENT ORBS ===== -->
+    <div class="ambient" aria-hidden="true">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
     </div>
-  </header>
 
-  <main>
-    <section class="register-container">
-      <div class="container">
-        <div class="register-box">
-          <h1 class="register-title">CREATE ACCOUNT</h1>
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">§</span>
+                <span class="logo-text">Sudo Society</span>
+            </a>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="index.html#challenges">Challenges</a>
+                <a href="index.html#leaderboard">Leaderboard</a>
+                <a href="event.php">Event</a>
+                <a href="index.html#about">About</a>
 
-          <div class="message-box" id="registerMessageBox" style="display: none;">
-            <p id="registerMessageText"></p>
-          </div>
-
-          <form id="registerForm"> <div class="form-group">
-              <label for="username">USERNAME</label>
-              <input type="text" id="username" name="username" class="form-control" placeholder="hacker1337" required minlength="4" maxlength="16">
-              <div class="error-message" id="usernameError">Username must be 4-16 characters.</div>
-            </div>
-            
-            <div class="form-group">
-              <label for="email">EMAIL</label>
-              <input type="email" id="email" name="email" class="form-control" placeholder="hacker@sudo.society" required>
-              <div class="error-message" id="emailError">Please enter a valid email address.</div>
-            </div>
-            
-            <div class="form-group">
-              <label for="password">PASSWORD</label>
-              <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required minlength="8">
-              <div class="error-message" id="passwordError">Password must be at least 8 characters long.</div>
-            </div>
-            
-            <div class="form-group">
-              <label for="confirmPassword">CONFIRM PASSWORD</label>
-              <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="••••••••" required>
-              <div class="error-message" id="confirmPasswordError">Passwords do not match.</div>
-            </div>
-            
-            <div class="checkbox-group">
-              <input type="checkbox" id="terms" required>
-              <label for="terms">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
-              <div class="error-message" id="termsError" style="display:none; color: var(--neon-pink); margin-left: 10px;">You must agree to the terms.</div>
-            </div>
-            
-            <button type="submit" class="submit-btn" id="registerBtn">REGISTER</button>
-            
-            <div class="login-link">
-              Already have an account? <a href="login.html">Login</a>
-            </div>
-          </form>
+                <!-- Theme Toggle -->
+                <div class="theme-toggle" id="themeToggle" role="button" tabindex="0" aria-label="Toggle theme">
+                    <span class="toggle-icon" id="toggleIcon">🌙</span>
+                    <div class="toggle-track">
+                        <div class="toggle-dot"></div>
+                    </div>
+                    <span class="toggle-label" id="toggleLabel">Dark</span>
+                </div>
+            </nav>
         </div>
-      </div>
+    </header>
+
+    <!-- ===== REGISTER SECTION ===== -->
+    <section class="register-section">
+        <div class="container">
+            <div class="register-box fade-up">
+                <h1 class="register-title">Create Account</h1>
+                <p class="register-subtitle">
+                    Join the elite. <a href="login.html">Already registered?</a>
+                </p>
+
+                <!-- Message Box -->
+                <div class="message-box" id="registerMessageBox">
+                    <p id="registerMessageText"></p>
+                </div>
+
+                <!-- Form -->
+                <form id="registerForm" novalidate>
+                    <!-- Username -->
+                    <div class="form-group" id="usernameGroup">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="hacker1337" required minlength="4" maxlength="16" autocomplete="username" />
+                        <div class="error-message" id="usernameError">Username must be 4–16 characters.</div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group" id="emailGroup">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="hacker@sudo.society" required autocomplete="email" />
+                        <div class="error-message" id="emailError">Please enter a valid email address.</div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group" id="passwordGroup">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required minlength="8" autocomplete="new-password" />
+                        <div class="error-message" id="passwordError">Password must be at least 8 characters.</div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-group" id="confirmGroup">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="••••••••" required autocomplete="new-password" />
+                        <div class="error-message" id="confirmPasswordError">Passwords do not match.</div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="checkbox-group" id="termsGroup">
+                        <input type="checkbox" id="terms" required />
+                        <label for="terms">
+                            I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
+                        </label>
+                        <div class="error-message" id="termsError">You must agree to the terms.</div>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="submit-btn pulse-ring" id="registerBtn">
+                        <span class="btn-text">Register</span>
+                        <span class="btn-loader"></span>
+                    </button>
+
+                    <div class="login-link">
+                        Already have an account? <a href="login.html">Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </section>
-  </main>
 
-  <footer>
-    <div class="container">
-      <p class="copyright">© 2023 Sudo Society. All rights reserved. Developed by JENSLIN</p>
-    </div>
-  </footer>
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container">
+            <p class="footer-copy">© 2026 Sudo Society. All rights reserved. Developed by JENSLIN</p>
+        </div>
+    </footer>
 
-  <script>
-    // --- Configuration ---
-    const API_URL = 'http://192.168.1.2/Sudo_society/api/register.php'; // <--- **VERIFY AND ADJUST THIS LINE!**
+    <!-- ============================================================
+    SCRIPT
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
 
-    // DOM Elements
-    const registerForm = document.getElementById('registerForm');
-    const usernameInput = document.getElementById('username');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    const termsCheckbox = document.getElementById('terms');
-    const registerBtn = document.getElementById('registerBtn');
-    const registerMessageBox = document.getElementById('registerMessageBox');
-    const registerMessageText = document.getElementById('registerMessageText');
+            // ============================================================
+            // CONFIGURATION
+            // ============================================================
+            const API_URL = 'http://192.168.1.2/Sudo_society/api/register.php';
 
-    // Error message elements for specific fields
-    const usernameError = document.getElementById('usernameError');
-    const emailError = document.getElementById('emailError');
-    const passwordError = document.getElementById('passwordError');
-    const confirmPasswordError = document.getElementById('confirmPasswordError');
-    const termsError = document.getElementById('termsError');
+            // ============================================================
+            // DOM REFS
+            // ============================================================
+            const registerForm = document.getElementById('registerForm');
+            const usernameInput = document.getElementById('username');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const confirmInput = document.getElementById('confirmPassword');
+            const termsCheckbox = document.getElementById('terms');
+            const registerBtn = document.getElementById('registerBtn');
+            const msgBox = document.getElementById('registerMessageBox');
+            const msgText = document.getElementById('registerMessageText');
 
-    // --- Helper Function to Display Messages ---
-    function showRegisterMessage(message, type) {
-        registerMessageText.textContent = message;
-        registerMessageBox.className = 'message-box ' + type;
-        registerMessageBox.style.display = 'block';
-        setTimeout(() => {
-            registerMessageBox.style.display = 'none';
-        }, 5000); // Hide message after 5 seconds
-    }
+            const usernameGroup = document.getElementById('usernameGroup');
+            const emailGroup = document.getElementById('emailGroup');
+            const passwordGroup = document.getElementById('passwordGroup');
+            const confirmGroup = document.getElementById('confirmGroup');
+            const termsGroup = document.getElementById('termsGroup');
 
-    // --- Validation Functions ---
-    function validateUsername() {
-        const value = usernameInput.value.trim();
-        const parent = usernameInput.parentElement;
-        if (value.length < 4 || value.length > 16) {
-            parent.classList.add('error');
-            parent.classList.remove('success');
-            usernameError.style.display = 'block';
-            return false;
-        } else {
-            parent.classList.remove('error');
-            parent.classList.add('success');
-            usernameError.style.display = 'none';
-            return true;
-        }
-    }
+            const usernameError = document.getElementById('usernameError');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            const confirmError = document.getElementById('confirmPasswordError');
+            const termsError = document.getElementById('termsError');
 
-    function validateEmail() {
-        const value = emailInput.value.trim();
-        const parent = emailInput.parentElement;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value)) {
-            parent.classList.add('error');
-            parent.classList.remove('success');
-            emailError.style.display = 'block';
-            return false;
-        } else {
-            parent.classList.remove('error');
-            parent.classList.add('success');
-            emailError.style.display = 'none';
-            return true;
-        }
-    }
+            // ============================================================
+            // THEME TOGGLE
+            // ============================================================
+            const toggle = document.getElementById('themeToggle');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const toggleLabel = document.getElementById('toggleLabel');
+            const body = document.body;
 
-    function validatePassword() {
-        const value = passwordInput.value;
-        const parent = passwordInput.parentElement;
-        if (value.length < 8) {
-            parent.classList.add('error');
-            parent.classList.remove('success');
-            passwordError.style.display = 'block';
-            return false;
-        } else {
-            parent.classList.remove('error');
-            parent.classList.add('success');
-            passwordError.style.display = 'none';
-            return true;
-        }
-    }
+            const savedTheme = localStorage.getItem('sudo-theme');
+            if (savedTheme === 'light') {
+                body.classList.add('light');
+                toggleIcon.textContent = '☀️';
+                toggleLabel.textContent = 'Light';
+            } else {
+                toggleIcon.textContent = '🌙';
+                toggleLabel.textContent = 'Dark';
+            }
 
-    function validateConfirmPassword() {
-        const passwordValue = passwordInput.value;
-        const confirmPasswordValue = confirmPasswordInput.value;
-        const parent = confirmPasswordInput.parentElement;
-        if (confirmPasswordValue !== passwordValue || confirmPasswordValue.length === 0) {
-            parent.classList.add('error');
-            parent.classList.remove('success');
-            confirmPasswordError.style.display = 'block';
-            return false;
-        } else {
-            parent.classList.remove('error');
-            parent.classList.add('success');
-            confirmPasswordError.style.display = 'none';
-            return true;
-        }
-    }
+            function toggleTheme() {
+                body.classList.toggle('light');
+                const isLight = body.classList.contains('light');
+                localStorage.setItem('sudo-theme', isLight ? 'light' : 'dark');
+                toggleIcon.textContent = isLight ? '☀️' : '🌙';
+                toggleLabel.textContent = isLight ? 'Light' : 'Dark';
+            }
 
-    function validateTerms() {
-        if (!termsCheckbox.checked) {
-            termsError.style.display = 'block';
-            return false;
-        } else {
-            termsError.style.display = 'none';
-            return true;
-        }
-    }
-
-    // --- Event Listeners for Live Validation ---
-    usernameInput.addEventListener('blur', validateUsername);
-    emailInput.addEventListener('blur', validateEmail);
-    passwordInput.addEventListener('blur', validatePassword);
-    confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
-    passwordInput.addEventListener('input', validateConfirmPassword); // Re-validate confirm password if password changes
-    termsCheckbox.addEventListener('change', validateTerms);
-
-    // --- Registration Form Submission Handler ---
-    registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent default form submission
-
-        // Run all validations on submit
-        const isUsernameValid = validateUsername();
-        const isEmailValid = validateEmail();
-        const isPasswordValid = validatePassword();
-        const isConfirmPasswordValid = validateConfirmPassword();
-        const areTermsAccepted = validateTerms();
-
-        // If any client-side validation fails, stop here
-        if (!isUsernameValid || !isEmailValid || !isPasswordValid || !isConfirmPasswordValid || !areTermsAccepted) {
-            showRegisterMessage("Please correct the errors in the form.", "error");
-            return;
-        }
-
-        // Disable button and show loading state
-        registerBtn.disabled = true;
-        registerBtn.textContent = 'CREATING ACCOUNT...';
-        registerBtn.style.background = 'linear-gradient(45deg, var(--neon-blue), var(--neon-green))';
-
-        const username = usernameInput.value.trim();
-        const email = emailInput.value.trim();
-        const password = passwordInput.value; // Don't trim password
-        const confirmPassword = confirmPasswordInput.value;
-
-        try {
-            const response = await fetch(`${API_URL}?action=register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, email, password, confirmPassword })
+            toggle.addEventListener('click', toggleTheme);
+            toggle.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleTheme();
+                }
             });
 
-            const result = await response.json();
-
-            if (result.success) {
-                showRegisterMessage(result.message || "Registration successful! Redirecting...", "success");
-                registerBtn.textContent = 'ACCESS GRANTED!';
-                registerBtn.style.background = 'linear-gradient(45deg, #00ff00, var(--neon-green))';
-
-                setTimeout(() => {
-                    window.location.href = 'http://192.168.1.2/Sudo_society_beta/dashboard.php'; // Redirect to challenges page after successful registration
-                }, 1500); // Wait a bit before redirecting
-            } else {
-                let errorMessage = result.message || "Registration failed. Please try again.";
-                if (result.errors && Array.isArray(result.errors)) {
-                    errorMessage += "<br>" + result.errors.join("<br>"); // Display multiple errors
+            // ============================================================
+            // MESSAGE HELPER
+            // ============================================================
+            function showMessage(message, type) {
+                msgText.textContent = message;
+                msgBox.className = 'message-box ' + type;
+                msgBox.style.display = 'block';
+                // Auto-hide after 6s, but only if not a success redirect
+                if (type !== 'success') {
+                    clearTimeout(msgBox._hideTimer);
+                    msgBox._hideTimer = setTimeout(() => {
+                        msgBox.style.display = 'none';
+                    }, 6000);
                 }
-                showRegisterMessage(errorMessage, "error");
-                registerBtn.textContent = 'REGISTRATION FAILED';
-                registerBtn.style.background = 'linear-gradient(45deg, var(--neon-pink), #ff0011)';
-
-                setTimeout(() => {
-                    registerBtn.textContent = 'REGISTER';
-                    registerBtn.style.background = 'linear-gradient(45deg, var(--neon-green), var(--neon-blue))'; // Reset button style
-                    registerBtn.disabled = false;
-                }, 2000); // Reset button after a delay
             }
-        } catch (error) {
-            console.error('Registration API call failed:', error);
-            showRegisterMessage("An error occurred during registration. Please try again.", "error");
-            registerBtn.textContent = 'REGISTER';
-            registerBtn.style.background = 'linear-gradient(45deg, var(--neon-green), var(--neon-blue))'; // Reset button style
-            registerBtn.disabled = false;
-        }
-    });
 
-    // --- Initial Check on Page Load (Optional, but good practice) ---
-    // If a user somehow lands on register.html while already logged in, redirect them.
-    document.addEventListener('DOMContentLoaded', async () => {
-        console.log("Register page loaded. Checking login status...");
-        try {
-            const response = await fetch(`${API_URL}?action=checkLoginStatus`);
-            const result = await response.json();
+            function hideMessage() {
+                msgBox.style.display = 'none';
+                clearTimeout(msgBox._hideTimer);
+            }
 
-            if (result.success && result.loggedIn) {
-                console.log("User is already logged in:", result.user.username);
-                showRegisterMessage(`You are already logged in as ${result.user.username}. Redirecting...`, "success");
+            // ============================================================
+            // VALIDATION FUNCTIONS
+            // ============================================================
+            function validateUsername() {
+                const val = usernameInput.value.trim();
+                const valid = val.length >= 4 && val.length <= 16;
+                usernameGroup.classList.toggle('error', !valid);
+                usernameGroup.classList.toggle('success', valid && val.length > 0);
+                usernameError.style.display = valid ? 'none' : 'block';
+                return valid || val.length === 0; // allow empty for live validation
+            }
+
+            function validateEmail() {
+                const val = emailInput.value.trim();
+                const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const valid = regex.test(val);
+                emailGroup.classList.toggle('error', !valid && val.length > 0);
+                emailGroup.classList.toggle('success', valid);
+                emailError.style.display = (valid || val.length === 0) ? 'none' : 'block';
+                return valid || val.length === 0;
+            }
+
+            function validatePassword() {
+                const val = passwordInput.value;
+                const valid = val.length >= 8;
+                passwordGroup.classList.toggle('error', !valid && val.length > 0);
+                passwordGroup.classList.toggle('success', valid);
+                passwordError.style.display = (valid || val.length === 0) ? 'none' : 'block';
+                return valid || val.length === 0;
+            }
+
+            function validateConfirm() {
+                const pwd = passwordInput.value;
+                const conf = confirmInput.value;
+                const valid = conf === pwd && conf.length > 0;
+                confirmGroup.classList.toggle('error', !valid && conf.length > 0);
+                confirmGroup.classList.toggle('success', valid);
+                confirmError.style.display = (valid || conf.length === 0) ? 'none' : 'block';
+                return valid || conf.length === 0;
+            }
+
+            function validateTerms() {
+                const valid = termsCheckbox.checked;
+                termsGroup.classList.toggle('error', !valid);
+                termsError.style.display = valid ? 'none' : 'block';
+                return valid;
+            }
+
+            // ============================================================
+            // LIVE VALIDATION EVENTS
+            // ============================================================
+            usernameInput.addEventListener('input', validateUsername);
+            usernameInput.addEventListener('blur', () => {
+                if (usernameInput.value.trim().length > 0) validateUsername();
+            });
+
+            emailInput.addEventListener('input', validateEmail);
+            emailInput.addEventListener('blur', () => {
+                if (emailInput.value.trim().length > 0) validateEmail();
+            });
+
+            passwordInput.addEventListener('input', () => {
+                validatePassword();
+                if (confirmInput.value.length > 0) validateConfirm();
+            });
+
+            confirmInput.addEventListener('input', validateConfirm);
+
+            termsCheckbox.addEventListener('change', () => {
+                termsGroup.classList.toggle('error', !termsCheckbox.checked);
+                termsError.style.display = termsCheckbox.checked ? 'none' : 'block';
+            });
+
+            // ============================================================
+            // FORM SUBMISSION
+            // ============================================================
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideMessage();
+
+                // Run all validations
+                const isUsernameValid = validateUsername() && usernameInput.value.trim().length >= 4;
+                const isEmailValid = validateEmail() && emailInput.value.trim().length > 0;
+                const isPasswordValid = validatePassword() && passwordInput.value.length >= 8;
+                const isConfirmValid = validateConfirm() && confirmInput.value.length > 0;
+                const isTermsValid = validateTerms();
+
+                if (!isUsernameValid || !isEmailValid || !isPasswordValid || !isConfirmValid || !isTermsValid) {
+                    showMessage('Please fix the errors in the form.', 'error');
+                    return;
+                }
+
+                // Disable button & show loading
                 registerBtn.disabled = true;
-                registerBtn.textContent = 'ALREADY LOGGED IN';
-                registerBtn.style.background = 'linear-gradient(45deg, #00ff00, var(--neon-green))';
-                setTimeout(() => {
-                    window.location.href = 'http://192.168.1.2/Sudo_society_beta/dashboard.php'; // Redirect to challenges page
-                }, 1500);
-            } else {
-                console.log("User is not logged in, ready for registration.");
-                // Ensure button is enabled and styled correctly if not logged in
-                registerBtn.disabled = false;
-                registerBtn.textContent = 'REGISTER';
-                registerBtn.style.background = 'linear-gradient(45deg, var(--neon-green), var(--neon-blue))';
-            }
-        } catch (error) {
-            console.error("Error checking login status:", error);
-            showRegisterMessage("Could not verify login status. Please proceed with registration.", "error");
-            registerBtn.disabled = false;
-            registerBtn.textContent = 'REGISTER';
-            registerBtn.style.background = 'linear-gradient(45deg, var(--neon-green), var(--neon-blue))';
-        }
-    });
-  </script>
+                registerBtn.classList.add('loading');
+
+                const payload = {
+                    username: usernameInput.value.trim(),
+                    email: emailInput.value.trim(),
+                    password: passwordInput.value,
+                    confirmPassword: confirmInput.value
+                };
+
+                try {
+                    const response = await fetch(`${API_URL}?action=register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showMessage(result.message || 'Registration successful! Redirecting…', 'success');
+                        registerBtn.classList.remove('loading');
+                        registerBtn.querySelector('.btn-text').textContent = '✓ Done';
+                        registerBtn.style.background = 'var(--btn-primary-bg)';
+
+                        setTimeout(() => {
+                            window.location.href = 'http://192.168.1.2/Sudo_society_beta/dashboard.php';
+                        }, 1500);
+                    } else {
+                        let errMsg = result.message || 'Registration failed. Please try again.';
+                        if (result.errors && Array.isArray(result.errors)) {
+                            errMsg = result.errors.join(' ');
+                        }
+                        showMessage(errMsg, 'error');
+                        registerBtn.disabled = false;
+                        registerBtn.classList.remove('loading');
+                        registerBtn.querySelector('.btn-text').textContent = 'Register';
+                    }
+                } catch (err) {
+                    console.error('Registration error:', err);
+                    showMessage('Unable to connect to the server. Please try again.', 'error');
+                    registerBtn.disabled = false;
+                    registerBtn.classList.remove('loading');
+                    registerBtn.querySelector('.btn-text').textContent = 'Register';
+                }
+            });
+
+            // ============================================================
+            // CHECK LOGIN STATUS ON LOAD
+            // ============================================================
+            document.addEventListener('DOMContentLoaded', async () => {
+                try {
+                    const res = await fetch(`${API_URL}?action=checkLoginStatus`);
+                    const data = await res.json();
+                    if (data.success && data.loggedIn) {
+                        showMessage(`Already logged in as ${data.user.username}. Redirecting…`, 'success');
+                        registerBtn.disabled = true;
+                        registerBtn.querySelector('.btn-text').textContent = 'Already Logged In';
+                        setTimeout(() => {
+                            window.location.href = 'http://192.168.1.2/Sudo_society_beta/dashboard.php';
+                        }, 1500);
+                    }
+                } catch (_) {
+                    // Silent fail — user can still register
+                }
+            });
+
+        })();
+    </script>
+
 </body>
 </html>

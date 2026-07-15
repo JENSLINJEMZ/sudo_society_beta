@@ -1,203 +1,1379 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sudo Society CTF</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/index_style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sudo Society CTF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* ============================================================
+                   CSS VARIABLES (DARK MODE DEFAULT)
+                   ============================================================ */
+        :root {
+            --bg-primary: #0b0d0e;
+            --bg-secondary: rgba(255, 255, 255, 0.03);
+            --text-primary: #f0f5f3;
+            --text-secondary: rgba(240, 245, 243, 0.70);
+            --text-muted: rgba(240, 245, 243, 0.40);
+
+            --accent: #6fcf97;
+            --accent-dim: rgba(111, 207, 151, 0.12);
+            --accent-glow: 0 0 40px rgba(111, 207, 151, 0.10);
+            --accent-gradient: linear-gradient(135deg, #6fcf97, #27ae60);
+
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
+
+            --orb-1: rgba(111, 207, 151, 0.12);
+            --orb-2: rgba(46, 204, 113, 0.08);
+            --orb-3: rgba(111, 207, 151, 0.06);
+
+            --card-hover-border: rgba(111, 207, 151, 0.20);
+            --card-hover-shadow: 0 12px 48px rgba(0, 0, 0, 0.50), 0 0 40px rgba(111, 207, 151, 0.06);
+
+            --btn-primary-bg: linear-gradient(135deg, #6fcf97, #27ae60);
+            --btn-primary-color: #0b0d0e;
+            --btn-primary-shadow: 0 4px 24px rgba(111, 207, 151, 0.25);
+
+            --border-subtle: rgba(255, 255, 255, 0.04);
+            --table-hover: rgba(255, 255, 255, 0.02);
+
+            --logo-bg: linear-gradient(135deg, #6fcf97, #27ae60);
+            --logo-text-gradient: linear-gradient(135deg, #6fcf97, #27ae60);
+
+            --hero-gradient: linear-gradient(135deg, #f0f5f3 0%, #6fcf97 80%);
+            --section-title-gradient: linear-gradient(135deg, #f0f5f3, #6fcf97);
+
+            --toggle-bg: rgba(255, 255, 255, 0.08);
+            --toggle-dot: #6fcf97;
+            --toggle-border: rgba(255, 255, 255, 0.08);
+            --toggle-icon: #f0f5f3;
+
+            --scrollbar-track: #0b0d0e;
+            --scrollbar-thumb: #6fcf97;
+
+            --footer-border: rgba(255, 255, 255, 0.04);
+
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'Barlow Condensed', 'Inter', sans-serif;
+        }
+
+        /* ============================================================
+                   LIGHT MODE
+                   ============================================================ */
+        body.light {
+            --bg-primary: #f4f7f6;
+            --bg-secondary: rgba(0, 0, 0, 0.02);
+            --text-primary: #141817;
+            --text-secondary: rgba(20, 24, 23, 0.72);
+            --text-muted: rgba(20, 24, 23, 0.45);
+
+            --accent: #c0392b;
+            --accent-dim: rgba(192, 57, 43, 0.08);
+            --accent-glow: 0 0 40px rgba(192, 57, 43, 0.06);
+            --accent-gradient: linear-gradient(135deg, #c0392b, #a93226);
+
+            --glass-bg: rgba(255, 255, 255, 0.60);
+            --glass-border: rgba(0, 0, 0, 0.05);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+
+            --orb-1: rgba(192, 57, 43, 0.06);
+            --orb-2: rgba(180, 40, 30, 0.04);
+            --orb-3: rgba(192, 57, 43, 0.03);
+
+            --card-hover-border: rgba(192, 57, 43, 0.15);
+            --card-hover-shadow: 0 12px 48px rgba(0, 0, 0, 0.06), 0 0 30px rgba(192, 57, 43, 0.04);
+
+            --btn-primary-bg: linear-gradient(135deg, #c0392b, #a93226);
+            --btn-primary-color: #ffffff;
+            --btn-primary-shadow: 0 4px 24px rgba(192, 57, 43, 0.20);
+
+            --border-subtle: rgba(0, 0, 0, 0.04);
+            --table-hover: rgba(0, 0, 0, 0.01);
+
+            --logo-bg: linear-gradient(135deg, #c0392b, #a93226);
+            --logo-text-gradient: linear-gradient(135deg, #c0392b, #a93226);
+
+            --hero-gradient: linear-gradient(135deg, #141817 0%, #c0392b 80%);
+            --section-title-gradient: linear-gradient(135deg, #141817, #c0392b);
+
+            --toggle-bg: rgba(0, 0, 0, 0.06);
+            --toggle-dot: #c0392b;
+            --toggle-border: rgba(0, 0, 0, 0.06);
+            --toggle-icon: #141817;
+
+            --scrollbar-track: #f4f7f6;
+            --scrollbar-thumb: #c0392b;
+
+            --footer-border: rgba(0, 0, 0, 0.04);
+
+            --header-bg: rgba(244, 247, 246, 0.80);
+        }
+
+        /* ============================================================
+                   RESET & BASE
+                   ============================================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background 0.5s ease, color 0.4s ease;
+        }
+
+        /* ============================================================
+                   AMBIENT BACKGROUND ORBS
+                   ============================================================ */
+        .ambient {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .ambient .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: orbFloat 18s ease-in-out infinite alternate;
+            transition: background 0.8s ease, opacity 0.8s ease;
+        }
+
+        .ambient .orb:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            top: -10%;
+            left: -10%;
+            background: radial-gradient(circle, var(--orb-1), transparent 70%);
+            animation-duration: 22s;
+        }
+
+        .ambient .orb:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            bottom: -10%;
+            right: -10%;
+            background: radial-gradient(circle, var(--orb-2), transparent 70%);
+            animation-duration: 26s;
+            animation-delay: -6s;
+        }
+
+        .ambient .orb:nth-child(3) {
+            width: 350px;
+            height: 350px;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(circle, var(--orb-3), transparent 70%);
+            animation-duration: 20s;
+            animation-delay: -10s;
+        }
+
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(40px, -30px) scale(1.05);
+            }
+            66% {
+                transform: translate(-20px, 40px) scale(0.95);
+            }
+            100% {
+                transform: translate(20px, -20px) scale(1.02);
+            }
+        }
+
+        /* ============================================================
+                   GLASS CARD
+                   ============================================================ */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: 20px;
+            transition: background 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        /* ============================================================
+                   SCROLLBAR
+                   ============================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 10px;
+        }
+
+        /* ============================================================
+                   CONTAINER
+                   ============================================================ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============================================================
+                   HEADER
+                   ============================================================ */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 14px 0;
+            background: var(--header-bg, rgba(11, 13, 14, 0.70));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: background 0.5s ease, border-color 0.4s ease;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.85;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--logo-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 20px;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(111, 207, 151, 0.15);
+            transition: background 0.5s ease, box-shadow 0.4s ease;
+            font-family: var(--font-display);
+        }
+
+        body.light .logo-icon {
+            color: #fff;
+            box-shadow: 0 0 30px rgba(192, 57, 43, 0.12);
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+            background: var(--logo-text-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: background 0.5s ease;
+        }
+
+        nav {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 40px;
+            transition: color 0.3s ease, background 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        nav a.active {
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        /* ============================================================
+                   THEME TOGGLE
+                   ============================================================ */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 4px 10px 4px 4px;
+            border-radius: 40px;
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            transition: background 0.4s ease, border-color 0.4s ease;
+            user-select: none;
+            margin-left: 4px;
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.85;
+        }
+
+        .toggle-track {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            border-radius: 40px;
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            transition: background 0.4s ease, border-color 0.4s ease;
+            flex-shrink: 0;
+        }
+
+        .toggle-dot {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--toggle-dot);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        body.light .toggle-dot {
+            transform: translateX(18px);
+        }
+
+        .toggle-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.3px;
+            transition: color 0.4s ease;
+        }
+
+        .toggle-icon {
+            font-size: 0.85rem;
+            color: var(--toggle-icon);
+            transition: color 0.4s ease;
+        }
+
+        /* ============================================================
+                   HERO
+                   ============================================================ */
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 40px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            border: 1px solid var(--glass-border);
+            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.05;
+            margin-bottom: 20px;
+            background: var(--hero-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: background 0.5s ease;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto 36px;
+            font-weight: 400;
+            transition: color 0.4s ease;
+        }
+
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 36px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.4s ease, color 0.4s ease;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-color);
+            box-shadow: var(--btn-primary-shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 40px rgba(111, 207, 151, 0.35);
+        }
+
+        body.light .btn-primary:hover {
+            box-shadow: 0 8px 40px rgba(192, 57, 43, 0.25);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn .arrow {
+            transition: transform 0.3s ease;
+        }
+        .btn:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        /* ============================================================
+                   STATS BAR
+                   ============================================================ */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-top: 48px;
+            padding: 24px 32px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+            transition: background 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: -0.5px;
+            transition: color 0.4s ease;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: color 0.4s ease;
+        }
+
+        /* ============================================================
+                   SECTION HEADER
+                   ============================================================ */
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: var(--section-title-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: background 0.5s ease;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            font-size: 1.05rem;
+            transition: color 0.4s ease;
+        }
+
+        /* ============================================================
+                   CHALLENGES
+                   ============================================================ */
+        .challenges {
+            padding: 60px 0 80px;
+        }
+
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .challenge-card {
+            padding: 28px 24px 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, background 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, var(--accent-dim), transparent 60%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            transition: background 0.5s ease;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-hover-border);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .challenge-icon {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 12px;
+            display: inline-block;
+            background: var(--accent-dim);
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--glass-border);
+            transition: color 0.4s ease, background 0.4s ease, border-color 0.4s ease;
+        }
+
+        .challenge-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+            transition: color 0.4s ease;
+        }
+
+        .challenge-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            transition: color 0.4s ease;
+        }
+
+        .challenge-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 14px;
+            transition: color 0.4s ease, border-color 0.4s ease;
+        }
+
+        .challenge-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .challenge-meta .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: inline-block;
+            opacity: 0.5;
+            transition: background 0.4s ease;
+        }
+
+        /* ============================================================
+                   LEADERBOARD
+                   ============================================================ */
+        .leaderboard {
+            padding: 60px 0 80px;
+        }
+
+        .leaderboard .glass {
+            padding: 8px;
+            transition: background 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 16px 20px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: color 0.4s ease, border-color 0.4s ease;
+        }
+
+        tbody td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            transition: color 0.4s ease, border-color 0.4s ease;
+        }
+
+        tbody tr {
+            transition: background 0.25s ease;
+            cursor: default;
+        }
+
+        tbody tr:hover {
+            background: var(--table-hover);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rank {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-feature-settings: "tnum";
+            transition: color 0.4s ease;
+        }
+
+        .rank.gold {
+            color: #f1c40f;
+        }
+        .rank.silver {
+            color: #bdc3c7;
+        }
+        .rank.bronze {
+            color: #e67e22;
+        }
+
+        body.light .rank.gold {
+            color: #b7950b;
+        }
+        body.light .rank.silver {
+            color: #7f8c8d;
+        }
+        body.light .rank.bronze {
+            color: #a04000;
+        }
+
+        .team-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color 0.4s ease;
+        }
+
+        .points {
+            font-weight: 700;
+            color: var(--accent);
+            font-feature-settings: "tnum";
+            transition: color 0.4s ease;
+        }
+
+        .solved {
+            color: var(--text-muted);
+            font-feature-settings: "tnum";
+            transition: color 0.4s ease;
+        }
+
+        /* ============================================================
+                   FOOTER
+                   ============================================================ */
+        footer {
+            padding: 48px 0 32px;
+            border-top: 1px solid var(--footer-border);
+            text-align: center;
+            transition: border-color 0.4s ease;
+        }
+
+        .footer-brand {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.3rem;
+            background: var(--logo-text-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            transition: background 0.5s ease;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .footer-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, background 0.4s ease;
+        }
+
+        .footer-social a:hover {
+            color: var(--accent);
+            border-color: var(--card-hover-border);
+            transform: translateY(-2px);
+        }
+
+        .footer-copy {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            opacity: 0.6;
+            transition: color 0.4s ease;
+        }
+
+        /* ============================================================
+                   RESPONSIVE
+                   ============================================================ */
+        @media (max-width: 768px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .logo {
+                justify-content: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            nav a {
+                font-size: 0.8rem;
+                padding: 6px 14px;
+            }
+
+            .theme-toggle {
+                padding: 4px 8px 4px 4px;
+            }
+
+            .toggle-track {
+                width: 36px;
+                height: 20px;
+            }
+
+            .toggle-dot {
+                width: 14px;
+                height: 14px;
+                top: 2px;
+                left: 2px;
+            }
+
+            body.light .toggle-dot {
+                transform: translateX(16px);
+            }
+
+            .hero {
+                padding: 48px 0 40px;
+            }
+
+            .hero h1 {
+                font-size: clamp(2.4rem, 10vw, 3.4rem);
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 20px;
+            }
+
+            .challenges-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            thead th,
+            tbody td {
+                padding: 12px 14px;
+            }
+
+            .footer-links {
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 0.85rem;
+            }
+
+            .stats-bar {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                padding: 16px;
+            }
+
+            .stat-number {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* ============================================================
+                   ANIMATIONS
+                   ============================================================ */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(24px);
+            animation: fadeUp 0.8s ease forwards;
+        }
+
+        .fade-up:nth-child(2) {
+            animation-delay: 0.08s;
+        }
+        .fade-up:nth-child(3) {
+            animation-delay: 0.16s;
+        }
+        .fade-up:nth-child(4) {
+            animation-delay: 0.24s;
+        }
+        .fade-up:nth-child(5) {
+            animation-delay: 0.32s;
+        }
+        .fade-up:nth-child(6) {
+            animation-delay: 0.40s;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* pulse ring for CTA */
+        .pulse-ring {
+            position: relative;
+        }
+
+        .pulse-ring::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 60px;
+            border: 1px solid rgba(111, 207, 151, 0.15);
+            animation: ringPulse 2s ease-out infinite;
+            pointer-events: none;
+            transition: border-color 0.4s ease;
+        }
+
+        body.light .pulse-ring::after {
+            border-color: rgba(192, 57, 43, 0.15);
+        }
+
+        @keyframes ringPulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.15);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="scanline"></div>
-  <div class="bg-pulse"></div>
 
-  <header>
-    <div class="container">
-      <div class="header-content">
-        <div class="logo" onclick="window.location.href='#'">
-          <img src="sudo_society.png" alt="Sudo Society Logo" class="logo-img">
-          <span class="logo-text">Sudo Society</span>
-        </div>
-        <nav>
-          <a href="#">Home</a>
-          <a href="#challenges">Challenges</a>
-          <a href="#leaderboard">Leaderboard</a>
-          <a href="event.php">Event</a>
-          <a href="#">About</a>
-        </nav>
-      </div>
+    <!-- ===== AMBIENT ORBS ===== -->
+    <div class="ambient" aria-hidden="true">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
     </div>
-  </header>
 
-  <main>
-    <section class="hero">
-      <div class="container">
-        <div class="hero-content">
-          <div class="glitch-container">
-            <h1 class="glitch-main">Sudo Society CTF</h1>
-            <!-- <div class="glitch-layer glitch-red">Sudo  CTF</div>
-            <div class="glitch-layer glitch-blue">Sudo Society CTF</div> -->
-          </div>
-          <p class="hero-subtitle">Dive into the ultimate cybersecurity battleground. Test your skills against elite hackers worldwide.</p>
-          <button class="cta-button" id="registerBtn">REGISER NOW</button>
-        </div>
-      </div>
-    </section>
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <span class="logo-icon"><img src="sudo_society.png" alt="Sudo Society Logo"></span>
+                <span class="logo-text">Sudo Society</span>
+            </a>
+            <nav>
+                <a href="#index.html" class="active">Home</a>
+                <a href="#challenges">Challenges</a>
+                <a href="#leaderboard">Leaderboard</a>
+                <a href="event.php">Event</a>
+                <a href="#">About</a>
 
-    <section id="challenges" class="challenges">
-      <div class="container">
-        <h2 class="section-title">Challenge Categories</h2>
-        <div class="challenges-grid">
-          <div class="challenge-card">
-            <div class="challenge-icon">[WEB]</div>
-            <h3 class="challenge-title">Web Exploitation</h3>
-            <p class="challenge-desc">Test your skills against vulnerable web applications. Find and exploit vulnerabilities like XSS, SQLi, and CSRF.</p>
-            <div class="challenge-stats">
-              <span>2 Challenges</span>
-              <span>5+ Players</span>
-            </div>
-          </div>
-          <div class="challenge-card">
-            <div class="challenge-icon">[CRYPTO]</div>
-            <h3 class="challenge-title">Cryptography</h3>
-            <p class="challenge-desc">Break encryption schemes, crack hashes, and solve complex cipher challenges.</p>
-            <div class="challenge-stats">
-              <span>1 Challenges</span>
-              <span>4+ Players</span>
-            </div>
-          </div>
-          <div class="challenge-card">
-            <div class="challenge-icon">[PWN]</div>
-            <h3 class="challenge-title">Binary Exploitation</h3>
-            <p class="challenge-desc">Reverse engineer binaries, exploit buffer overflows, and perform memory corruption attacks.</p>
-            <div class="challenge-stats">
-              <span>2 Challenges</span>
-              <span>4+ Players</span>
-            </div>
-          </div>
-          <div class="challenge-card">
-            <div class="challenge-icon">[RE]</div>
-            <h3 class="challenge-title">Reverse Engineering</h3>
-            <p class="challenge-desc">Analyze and decompile binaries to understand their inner workings and find hidden flags.</p>
-            <div class="challenge-stats">
-              <span>1 Challenges</span>
-              <span>3+ Players</span>
-            </div>
-          </div>
-          <div class="challenge-card">
-            <div class="challenge-icon">[FORENSIC]</div>
-            <h3 class="challenge-title">Digital Forensics</h3>
-            <p class="challenge-desc">Analyze disk images, network traffic, and memory dumps to uncover hidden secrets.</p>
-            <div class="challenge-stats">
-              <span>1 Challenges</span>
-              <span>3+ Players</span>
-            </div>
-          </div>
-          <div class="challenge-card">
-            <div class="challenge-icon">[MISC]</div>
-            <h3 class="challenge-title">Miscellaneous</h3>
-            <p class="challenge-desc">Various challenges that don't fit into other categories, including steganography and programming.</p>
-            <div class="challenge-stats">
-              <span>2 Challenges</span>
-              <span>3+ Players</span>
-            </div>
-          </div>
+                <!-- Theme Toggle -->
+                <div class="theme-toggle" id="themeToggle" role="button" tabindex="0" aria-label="Toggle theme">
+                    <span class="toggle-icon" id="toggleIcon">🌙</span>
+                    <div class="toggle-track">
+                        <div class="toggle-dot"></div>
+                    </div>
+                    <span class="toggle-label" id="toggleLabel">Dark</span>
+                </div>
+            </nav>
         </div>
-      </div>
-    </section>
+    </header>
 
-    <!-- <section id="countdown" class="countdown">
-      <h3 class="countdown-title">EVENT STARTS IN</h3>
-      <div class="countdown-timer" id="countdownTimer">
-        <div class="countdown-item">
-          <div class="countdown-number" id="days">00</div>
-          <div class="countdown-label">Days</div>
-        </div>
-        <div class="countdown-item">
-          <div class="countdown-number" id="hours">00</div>
-          <div class="countdown-label">Hours</div>
-        </div>
-        <div class="countdown-item">
-          <div class="countdown-number" id="minutes">00</div>
-          <div class="countdown-label">Minutes</div>
-        </div>
-        <div class="countdown-item">
-          <div class="countdown-number" id="seconds">00</div>
-          <div class="countdown-label">Seconds</div>
-        </div>
-      </div>
-    </section> -->
+    <!-- ===== MAIN ===== -->
+    <main>
 
-    <section id="leaderboard" class="leaderboard">
-      <div class="container">
-        <h2 class="section-title">Leaderboard</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Team</th>
-              <th>Points</th>
-              <th>Solved</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="rank">1</td>
-              <td>0xBADF00D</td>
-              <td>4250</td>
-              <td>32</td>
-            </tr>
-            <tr>
-              <td class="rank">2</td>
-              <td>Stack Smashers</td>
-              <td>3980</td>
-              <td>30</td>
-            </tr>
-            <tr>
-              <td class="rank">3</td>
-              <td>Shell Collectors</td>
-              <td>3750</td>
-              <td>28</td>
-            </tr>
-            <tr>
-              <td class="rank">4</td>
-              <td>Null Byte</td>
-              <td>3520</td>
-              <td>27</td>
-            </tr>
-            <tr>
-              <td class="rank">5</td>
-              <td>ROP Stars</td>
-              <td>3350</td>
-              <td>26</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+        <!-- ===== HERO ===== -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-badge">🔥 Live CTF 2026</div>
+                <h1>Sudo Society<br />CTF</h1>
+                <p>
+                    Dive into the ultimate cybersecurity battleground. Test your skills
+                    against elite hackers worldwide.
+                </p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary pulse-ring" id="registerBtn">
+                        Register Now
+                        <span class="arrow">→</span>
+                    </button>
+                    <a href="#challenges" class="btn btn-secondary">
+                        Explore Challenges
+                    </a>
+                </div>
 
-  <footer>
-    <div class="container">
-      <div class="footer-logo">Sudo Society CTF</div>
-      <div class="footer-links">
-        <a href="#">Home</a>
-        <a href="#challenges">Challenges</a>
-        <a href="#leaderboard">Leaderboard</a>
-        <a href="event.php">Event</a>
-        <a href="#">Rules</a>
-        <a href="#">Contact</a>
-      </div>
-      <div class="social-links">
-        <a href="#" aria-label="Twitter"><i>𝕏</i></a>
-        <a href="#" aria-label="Discord"><i>𝔻</i></a>
-        <a href="#" aria-label="GitHub"><i>Ⓖ</i></a>
-        <a href="#" aria-label="YouTube"><i>Ⓨ</i></a>
-      </div>
-      <p class="copyright">© 2023 Sudo Society. All rights reserved. Developed by JENSLIN</p>
-    </div>
-  </footer>
+                <!-- Stats -->
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <div class="stat-number" id="statChallenges">12</div>
+                        <div class="stat-label">Challenges</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="statPlayers">284</div>
+                        <div class="stat-label">Players</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="statTeams">47</div>
+                        <div class="stat-label">Teams</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="statFlags">1.2k</div>
+                        <div class="stat-label">Flags Captured</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<script src="assets/js/index.js"></script>
+        <!-- ===== CHALLENGES ===== -->
+        <section id="challenges" class="challenges">
+            <div class="container">
+                <div class="section-header fade-up">
+                    <h2>Challenge Categories</h2>
+                    <p>Choose your battleground and prove your expertise.</p>
+                </div>
+
+                <div class="challenges-grid">
+                    <!-- Web -->
+                    <div class="challenge-card fade-up">
+                        <div class="challenge-icon">🌐 WEB</div>
+                        <h3>Web Exploitation</h3>
+                        <p>Test your skills against vulnerable web apps. XSS, SQLi, CSRF &amp; more.</p>
+                        <div class="challenge-meta">
+                            <span><span class="dot"></span> 2 Challenges</span>
+                            <span>⚡ 5+ Players</span>
+                        </div>
+                    </div>
+
+                    <!-- Crypto -->
+                    <div class="challenge-card fade-up">
+                        <div class="challenge-icon">🔐 CRYPTO</div>
+                        <h3>Cryptography</h3>
+                        <p>Break encryption, crack hashes, and solve complex ciphers.</p>
+                        <div class="challenge-meta">
+                            <span><span class="dot"></span> 1 Challenge</span>
+                            <span>⚡ 4+ Players</span>
+                        </div>
+                    </div>
+
+                    <!-- PWN -->
+                    <div class="challenge-card fade-up">
+                        <div class="challenge-icon">💥 PWN</div>
+                        <h3>Binary Exploitation</h3>
+                        <p>Reverse engineer binaries, exploit buffer overflows &amp; memory corruption.</p>
+                        <div class="challenge-meta">
+                            <span><span class="dot"></span> 2 Challenges</span>
+                            <span>⚡ 4+ Players</span>
+                        </div>
+                    </div>
+
+                    <!-- RE -->
+                    <div class="challenge-card fade-up">
+                        <div class="challenge-icon">🔧 RE</div>
+                        <h3>Reverse Engineering</h3>
+                        <p>Analyze and decompile binaries to uncover hidden flags.</p>
+                        <div class="challenge-meta">
+                            <span><span class="dot"></span> 1 Challenge</span>
+                            <span>⚡ 3+ Players</span>
+                        </div>
+                    </div>
+
+                    <!-- Forensics -->
+                    <div class="challenge-card fade-up">
+                        <div class="challenge-icon">🕵️ FORENSIC</div>
+                        <h3>Digital Forensics</h3>
+                        <p>Analyze disk images, network traffic, and memory dumps.</p>
+                        <div class="challenge-meta">
+                            <span><span class="dot"></span> 1 Challenge</span>
+                            <span>⚡ 3+ Players</span>
+                        </div>
+                    </div>
+
+                    <!-- Misc -->
+                    <div class="challenge-card fade-up">
+                        <div class="challenge-icon">🧩 MISC</div>
+                        <h3>Miscellaneous</h3>
+                        <p>Steganography, programming, and everything in between.</p>
+                        <div class="challenge-meta">
+                            <span><span class="dot"></span> 2 Challenges</span>
+                            <span>⚡ 3+ Players</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== LEADERBOARD ===== -->
+        <section id="leaderboard" class="leaderboard">
+            <div class="container">
+                <div class="section-header fade-up">
+                    <h2>Leaderboard</h2>
+                    <p>Top teams competing for glory.</p>
+                </div>
+
+                <div class="glass fade-up">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Team</th>
+                                <th>Points</th>
+                                <th>Solved</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="rank gold">#1</span></td>
+                                <td class="team-name">0xBADF00D</td>
+                                <td class="points">4,250</td>
+                                <td class="solved">32</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank silver">#2</span></td>
+                                <td class="team-name">Stack Smashers</td>
+                                <td class="points">3,980</td>
+                                <td class="solved">30</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank bronze">#3</span></td>
+                                <td class="team-name">Shell Collectors</td>
+                                <td class="points">3,750</td>
+                                <td class="solved">28</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank">#4</span></td>
+                                <td class="team-name">Null Byte</td>
+                                <td class="points">3,520</td>
+                                <td class="solved">27</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank">#5</span></td>
+                                <td class="team-name">ROP Stars</td>
+                                <td class="points">3,350</td>
+                                <td class="solved">26</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container">
+            <div class="footer-brand">Sudo Society CTF</div>
+            <div class="footer-links">
+                <a href="#">Home</a>
+                <a href="#challenges">Challenges</a>
+                <a href="#leaderboard">Leaderboard</a>
+                <a href="event.php">Event</a>
+                <a href="#">Rules</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" aria-label="Twitter">𝕏</a>
+                <a href="#" aria-label="Discord">𝔻</a>
+                <a href="#" aria-label="GitHub">Ⓖ</a>
+                <a href="#" aria-label="YouTube">Ⓨ</a>
+            </div>
+            <p class="footer-copy">© 2026 Sudo Society. All rights reserved. Developed by JENSLIN</p>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+    SCRIPT
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ========== THEME TOGGLE ==========
+            const toggle = document.getElementById('themeToggle');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const toggleLabel = document.getElementById('toggleLabel');
+            const body = document.body;
+
+            const savedTheme = localStorage.getItem('sudo-theme');
+            if (savedTheme === 'light') {
+                body.classList.add('light');
+                toggleIcon.textContent = '☀️';
+                toggleLabel.textContent = 'Light';
+            } else {
+                toggleIcon.textContent = '🌙';
+                toggleLabel.textContent = 'Dark';
+            }
+
+            function toggleTheme() {
+                body.classList.toggle('light');
+                const isLight = body.classList.contains('light');
+                localStorage.setItem('sudo-theme', isLight ? 'light' : 'dark');
+                toggleIcon.textContent = isLight ? '☀️' : '🌙';
+                toggleLabel.textContent = isLight ? 'Light' : 'Dark';
+            }
+
+            toggle.addEventListener('click', toggleTheme);
+            toggle.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleTheme();
+                }
+            });
+
+            // ========== REGISTER BUTTON ==========
+            const registerBtn = document.getElementById('registerBtn');
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.innerHTML = '✅ Access Granted';
+                    this.style.background = 'var(--btn-primary-bg)';
+                    this.style.boxShadow = '0 4px 32px rgba(111, 207, 151, 0.40)';
+                    setTimeout(() => {
+                        window.location.href = 'register.html';
+                    }, 600);
+                });
+            }
+
+            // ========== ANIMATED STATS ==========
+            function animateNumber(el, target, suffix = '') {
+                let current = 0;
+                const step = Math.max(1, Math.floor(target / 40));
+                const interval = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(interval);
+                    }
+                    el.textContent = current.toLocaleString() + suffix;
+                }, 30);
+            }
+
+            const statChallenges = document.getElementById('statChallenges');
+            const statPlayers = document.getElementById('statPlayers');
+            const statTeams = document.getElementById('statTeams');
+            const statFlags = document.getElementById('statFlags');
+
+            if (statChallenges) animateNumber(statChallenges, 12);
+            if (statPlayers) animateNumber(statPlayers, 284);
+            if (statTeams) animateNumber(statTeams, 47);
+            if (statFlags) animateNumber(statFlags, 1240);
+
+            // ========== SMOOTH ANCHOR SCROLL ==========
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            // ========== NAV ACTIVE STATE ==========
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('nav a:not(.theme-toggle)');
+
+            function updateActiveNav() {
+                let current = '';
+                sections.forEach(section => {
+                    const top = section.offsetTop - 120;
+                    if (window.scrollY >= top) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveNav, { passive: true });
+            updateActiveNav();
+
+            // ========== GLASS HOVER SPARK ==========
+            document.querySelectorAll('.challenge-card, .glass').forEach(el => {
+                el.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width;
+                    const y = (e.clientY - rect.top) / rect.height;
+                    this.style.setProperty('--mouse-x', x);
+                    this.style.setProperty('--mouse-y', y);
+                });
+            });
+
+        })();
+    </script>
+
 </body>
 </html>

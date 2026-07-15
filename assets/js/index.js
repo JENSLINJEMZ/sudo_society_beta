@@ -1,81 +1,122 @@
 
-// Enhanced glitch effect
-const glitchText = document.querySelector('.glitch-main');
+(function() {
+    'use strict';
 
-function randomGlitch() {
-    if (Math.random() > 0.7) {
-    glitchText.style.transform = `translate(${(Math.random() - 0.5) * 10}px, ${(Math.random() - 0.5) * 5}px)`;
-    glitchText.style.opacity = '0.8';
-    
-    setTimeout(() => {
-        glitchText.style.transform = 'translate(0, 0)';
-        glitchText.style.opacity = '1';
-    }, 100);
+    // ========== THEME TOGGLE ==========
+    const toggle = document.getElementById('themeToggle');
+    const toggleIcon = document.getElementById('toggleIcon');
+    const toggleLabel = document.getElementById('toggleLabel');
+    const body = document.body;
+
+    const savedTheme = localStorage.getItem('sudo-theme');
+    if (savedTheme === 'light') {
+        body.classList.add('light');
+        toggleIcon.textContent = '☀️';
+        toggleLabel.textContent = 'Light';
+    } else {
+        toggleIcon.textContent = '🌙';
+        toggleLabel.textContent = 'Dark';
     }
-}
 
-setInterval(randomGlitch, 2000);
+    function toggleTheme() {
+        body.classList.toggle('light');
+        const isLight = body.classList.contains('light');
+        localStorage.setItem('sudo-theme', isLight ? 'light' : 'dark');
+        toggleIcon.textContent = isLight ? '☀️' : '🌙';
+        toggleLabel.textContent = isLight ? 'Light' : 'Dark';
+    }
 
-// Button hover effect
-const ctaButton = document.getElementById('registerBtn');
-
-ctaButton.addEventListener('mouseenter', () => {
-    ctaButton.style.boxShadow = '0 0 30px rgba(0, 255, 136, 0.8)';
-});
-
-ctaButton.addEventListener('mouseleave', () => {
-    ctaButton.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.5)';
-});
-
-ctaButton.addEventListener('click', () => {
-    ctaButton.textContent = 'ACCESS GRANTED';
-    ctaButton.style.background = 'linear-gradient(45deg, var(--neon-green), #00ff00)';
-    window.location.href = "register.html"
-    setTimeout(() => {
-    ctaButton.textContent = 'REGISTER NOW';
-    ctaButton.style.background = 'linear-gradient(45deg, var(--neon-green), var(--neon-blue))';
-    }, 2000);
-});
-
-// Countdown timer
-function updateCountdown() {
-    const eventDate = new Date('2023-12-31T00:00:00').getTime();
-    const now = new Date().getTime();
-    const distance = eventDate - now;
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    document.getElementById('days').textContent = days.toString().padStart(2, '0');
-    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-
-    // Glitch effect when under 1 hour
-    if (distance < 3600000) {
-    const countdownItems = document.querySelectorAll('.countdown-number');
-    countdownItems.forEach(item => {
-        if (Math.random() > 0.7) {
-        item.style.color = `hsl(${Math.random() * 120}, 100%, 50%)`;
-        setTimeout(() => {
-            item.style.color = 'var(--neon-green)';
-        }, 100);
+    toggle.addEventListener('click', toggleTheme);
+    toggle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleTheme();
         }
     });
+
+    // ========== REGISTER BUTTON ==========
+    const registerBtn = document.getElementById('registerBtn');
+    if (registerBtn) {
+        registerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.innerHTML = '✅ Access Granted';
+            this.style.background = 'var(--btn-primary-bg)';
+            this.style.boxShadow = '0 4px 32px rgba(111, 207, 151, 0.40)';
+            setTimeout(() => {
+                window.location.href = 'register.html';
+            }, 600);
+        });
     }
-}
 
-setInterval(updateCountdown, 1000);
-updateCountdown();
+    // ========== ANIMATED STATS ==========
+    function animateNumber(el, target, suffix = '') {
+        let current = 0;
+        const step = Math.max(1, Math.floor(target / 40));
+        const interval = setInterval(() => {
+            current += step;
+            if (current >= target) {
+                current = target;
+                clearInterval(interval);
+            }
+            el.textContent = current.toLocaleString() + suffix;
+        }, 30);
+    }
 
-// Smooth scrolling for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-    e.preventDefault();
-    document.querySelector(this.getAttribute('href')).scrollIntoView({
-        behavior: 'smooth'
+    const statChallenges = document.getElementById('statChallenges');
+    const statPlayers = document.getElementById('statPlayers');
+    const statTeams = document.getElementById('statTeams');
+    const statFlags = document.getElementById('statFlags');
+
+    if (statChallenges) animateNumber(statChallenges, 12);
+    if (statPlayers) animateNumber(statPlayers, 284);
+    if (statTeams) animateNumber(statTeams, 47);
+    if (statFlags) animateNumber(statFlags, 1240);
+
+    // ========== SMOOTH ANCHOR SCROLL ==========
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            const target = document.querySelector(targetId);
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
     });
+
+    // ========== NAV ACTIVE STATE ==========
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a:not(.theme-toggle)');
+
+    function updateActiveNav() {
+        let current = '';
+        sections.forEach(section => {
+            const top = section.offsetTop - 120;
+            if (window.scrollY >= top) {
+                current = section.getAttribute('id');
+            }
+        });
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
+    updateActiveNav();
+
+    // ========== GLASS HOVER SPARK ==========
+    document.querySelectorAll('.challenge-card, .glass').forEach(el => {
+        el.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const y = (e.clientY - rect.top) / rect.height;
+            this.style.setProperty('--mouse-x', x);
+            this.style.setProperty('--mouse-y', y);
+        });
     });
-});
+
+})();
