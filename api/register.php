@@ -1,39 +1,39 @@
 <?php
 require_once '../lib/includes/Database.class.php';
-// Set headers for CORS and JSON content type
+
 header('Content-Type: application/json');
-// IMPORTANT: For production, specify your frontend domain instead of '*'
-// Example: header('Access-Control-Allow-Origin: https://yourctf.com');
+
+
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-header('Access-Control-Allow-Credentials: true'); // Important for sessions/cookies
+header('Access-Control-Allow-Credentials: true'); 
 
-// Handle preflight requests for CORS (important for some browsers/methods)
+
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-// Enable error reporting for debugging (REMOVE IN PRODUCTION)
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Establish database connection
+
 $conn = DataBase::connection();
 
-// Check connection
+
 if ($conn->connect_error) {
-    http_response_code(500); // Internal Server Error
+    http_response_code(500); 
     echo json_encode(['success' => false, 'error' => 'Database connection failed: ' . $conn->connect_error]);
     exit();
 }
 
-// Start session for managing user login state
+
 session_start();
 
-// Get current user ID and username from session, defaults to null if not set
+
 $current_user_id = $_SESSION['user_id'] ?? null;
 $current_username = $_SESSION['username'] ?? null;
 
@@ -46,9 +46,9 @@ switch ($action) {
         $username = trim($input['username'] ?? '');
         $email = trim($input['email'] ?? '');
         $password = $input['password'] ?? '';
-        $confirmPassword = $input['confirmPassword'] ?? ''; // Added for server-side match check
+        $confirmPassword = $input['confirmPassword'] ?? ''; 
 
-        // --- Server-side Validation ---
+        
         $errors = [];
 
         if (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
@@ -67,7 +67,7 @@ switch ($action) {
             $errors[] = 'Passwords do not match.';
         }
 
-        // Check if username or email already exists
+        
         if (empty($errors)) {
             $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
             $stmt->bind_param("ss", $username, $email);
@@ -75,7 +75,7 @@ switch ($action) {
             $result = $stmt->get_result();
             if ($result->num_rows > 0) {
                 $existingUser = $result->fetch_assoc();
-                // Determine if username or email is taken
+                
                 $stmt_check_username = $conn->prepare("SELECT id FROM users WHERE username = ?");
                 $stmt_check_username->bind_param("s", $username);
                 $stmt_check_username->execute();
@@ -98,27 +98,27 @@ switch ($action) {
         }
 
         if (!empty($errors)) {
-            http_response_code(400); // Bad Request
+            http_response_code(400); 
             echo json_encode(['success' => false, 'message' => 'Registration failed.', 'errors' => $errors]);
             exit();
         }
 
-        // Hash the password securely
+        
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        // Insert new user into the database
+        
         $stmt = $conn->prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $username, $email, $hashed_password);
 
         if ($stmt->execute()) {
-            // Registration successful - automatically log the user in
-            $_SESSION['user_id'] = $conn->insert_id; // Get the ID of the newly inserted user
+            
+            $_SESSION['user_id'] = $conn->insert_id; 
             $_SESSION['username'] = $username;
             echo json_encode(['success' => true, 'message' => 'Registration successful! You are now logged in.', 'user_id' => $_SESSION['user_id'], 'username' => $_SESSION['username']]);
         } else {
-            http_response_code(500); // Internal Server Error
+            http_response_code(500); 
             echo json_encode(['success' => false, 'message' => 'Registration failed due to a server error. Please try again later.']);
-            error_log("User registration failed: " . $stmt->error); // Log the actual database error
+            error_log("User registration failed: " . $stmt->error); 
         }
         $stmt->close();
         break;

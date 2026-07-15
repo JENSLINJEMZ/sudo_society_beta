@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Sudo Society CTF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Color Variables from challengg.html and dashh.php */
+        :root {
+            --neon-green: #00ff88;
+            --neon-pink: #ff00c8;
+            --neon-blue: #00ffff;
+            --dark-bg: #0a0a0a;
+            --darker-bg: #050505;
+            --card-bg: rgba(20, 20, 20, 0.7);
+            --glow: 0 0 15px rgba(0, 255, 136, 0.5);
+            --glow-intense: 0 0 25px rgba(0, 255, 136, 0.9);
+            --dim-color: rgba(192, 252, 204, 0.3);
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: var(--dark-bg);
+            color: #c0fccc;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.05) 0%, transparent 25%),
+                              radial-gradient(circle at 80% 70%, rgba(0, 200, 255, 0.05) 0%, transparent 25%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to bottom, transparent, var(--neon-green), transparent);
+            animation: scan 4s linear infinite;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        @keyframes scan {
+            0% { top: -2px; }
+            100% { top: 100%; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        /* Header (adapted from dashh.php) */
+        header {
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+        }
+
+        .logo-img {
+            height: 40px;
+            filter: drop-shadow(0 0 8px var(--neon-green));
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--neon-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: var(--glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: #c0fccc;
+            text-decoration: none;
+            font-size: 0.9rem;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-green);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-green);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--neon-green);
+            text-shadow: var(--glow);
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        main {
+            flex-grow: 1;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .admin-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--neon-green);
+            color: var(--dark-bg);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .btn-primary:hover {
+            background-color: #00e676;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            backdrop-filter: blur(5px);
+            overflow-x: auto; /* Enable horizontal scroll for table on small screens */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            color: #c0fccc;
+        }
+
+        th {
+            background-color: rgba(0, 255, 136, 0.1);
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-green);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            white-space: nowrap; /* Prevent wrapping of headers */
+        }
+
+        tr:hover {
+            background-color: rgba(0, 255, 136, 0.05);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .btn-edit, .btn-delete {
+            padding: 0.5rem 0.8rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Share Tech Mono', monospace;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-edit {
+            background-color: var(--neon-blue);
+            color: var(--dark-bg);
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+
+        .btn-edit:hover {
+            background-color: #00e6e6;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+        }
+
+        .btn-delete {
+            background-color: var(--neon-pink);
+            color: var(--dark-bg);
+            box-shadow: 0 0 8px rgba(255, 0, 200, 0.5);
+        }
+
+        .btn-delete:hover {
+            background-color: #e600b8;
+            box-shadow: 0 0 15px rgba(255, 0, 200, 0.8);
+        }
+
+        /* Modal Styles (adapted from challengg.html) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--neon-blue);
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.visible .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--neon-green);
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-green);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--neon-green);
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="url"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 5px;
+            color: #c0fccc;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group input[type="url"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            outline: none;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-cancel {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #c0fccc;
+            border: 1px solid rgba(192, 252, 204, 0.3);
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-cancel:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: #c0fccc;
+        }
+
+        /* Message Box for success/error (adapted from challengg.html) */
+        .message-box {
+            display: none; /* Hidden by default */
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .message-box.visible {
+            display: block;
+        }
+
+        .message-box.success {
+            background-color: rgba(0, 255, 136, 0.1);
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+        }
+
+        .message-box.error {
+            background-color: rgba(255, 0, 200, 0.1);
+            color: var(--neon-pink);
+            border: 1px solid var(--neon-pink);
+        }
+
+        .message-box h3 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            header .container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .nav-links {
+                width: 100%;
+                justify-content: space-around;
+            }
+            .admin-controls {
+                justify-content: center;
+            }
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .btn-primary, .btn-edit, .btn-delete, .btn-cancel, #challengeForm button {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+            .form-group label, .form-group input, .form-group textarea, .form-group select {
+                font-size: 0.85rem;
+            }
+            .modal-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    <header>
+        <div class="container">
+            <div class="logo" onclick="window.location.href='index.html'">
+                <img src="sudo_society.png" alt="Sudo Logo" class="logo-img">
+                <span class="logo-text">Sudo Society</span>
+            </div>
+            <nav class="nav-links">
+                <a href="dashboard.php">Dashboard</a>
+                <a href="challenges.html">Challenges</a>
+                <a href="event.php">Events</a>
+                <a href="#" class="active">Admin</a>
+                <a href="" id="logout">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Event Challenge Administration</h1>
+
+        <div class="admin-controls">
+            <button class="btn-primary" id="addChallengeBtn"><i class="fas fa-plus-circle"></i> Add New Challenge</button>
+        </div>
+
+        <div class="table-container">
+            <table id="challengesTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Points</th>
+                        <th>Flag</th>
+                        <th>Solves</th>
+                        <th>Active</th>
+                        <th>Link</th>
+                        <th>Day Label</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="10" style="text-align: center;">Loading challenges...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="challengeModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">&times;</button>
+            <h2 class="modal-title" id="modalTitle">Add New Challenge</h2>
+            <form id="challengeForm">
+                <input type="hidden" id="challengeId" name="id">
+
+                <div class="form-group">
+                    <label for="name">Challenge Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <input type="text" id="category" name="category" required>
+                </div>
+                <div class="form-group">
+                    <label for="points">Points</label>
+                    <input type="number" id="points" name="points" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="flag">Flag</label>
+                    <input type="text" id="flag" name="flag" required>
+                </div>
+                <div class="form-group">
+                    <label for="solves">Solves</label>
+                    <input type="number" id="solves" name="solves" min="0" value="0" required>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="active" name="active" checked>
+                    <label for="active" style="display: inline-block;">Active</label>
+                </div>
+                <div class="form-group">
+                    <label for="link">Link (Optional)</label>
+                    <input type="url" id="link" name="link">
+                </div>
+                <div class="form-group">
+                    <label for="day_label">Day Label (Optional)</label>
+                    <input type="text" id="day_label" name="day_label">
+                </div>
+                <div class="form-group">
+                    <label for="story">Story (Optional)</label>
+                    <textarea id="story" name="story" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="learning_objectives_json">Learning Objectives (JSON Array, Optional)</label>
+                    <textarea id="learning_objectives_json" name="learning_objectives_json" rows="3" placeholder='["Objective 1", "Objective 2"]'></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="learning_details_html">Learning Details (HTML, Optional)</label>
+                    <textarea id="learning_details_html" name="learning_details_html" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="resources_json">Resources (JSON Array, Optional)</label>
+                    <textarea id="resources_json" name="resources_json" rows="3" placeholder='[{"name": "Resource Name", "url": "http://example.com"}]'></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="questions_json">Questions (JSON Array, Optional)</label>
+                    <textarea id="questions_json" name="questions_json" rows="3" placeholder='[{"question": "Q1", "answer": "A1"}]'></textarea>
+                </div>
+                 <div class="form-group">
+                    <label for="machine_link">Machine Link (Optional)</label>
+                    <input type="url" id="machine_link" name="machine_link">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelFormBtn">Cancel</button>
+                    <button type="submit" class="btn-primary" id="saveChallengeBtn">Add Challenge</button>
+                </div>
+                <div class="message-box" id="formMessageBox">
+                    <h3 id="formMessageBoxTitle"></h3>
+                    <p id="formMessageBoxText"></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // IMPORTANT: Adjust this to the URL of your challengapi.php file.
+        // Example: If challengapi.php is in 'http://localhost/my_ctf_app/challengapi.php'
+        const API_URL = 'http://192.168.1.2/Sudo_society_beta/admin/challengapi.php'; // <--- VERIFY AND ADJUST THIS LINE!
+
+        const challengesTableBody = document.querySelector('#challengesTable tbody');
+        const addChallengeBtn = document.getElementById('addChallengeBtn');
+        const challengeModal = document.getElementById('challengeModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const cancelFormBtn = document.getElementById('cancelFormBtn');
+        const challengeForm = document.getElementById('challengeForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const saveChallengeBtn = document.getElementById('saveChallengeBtn');
+        const formMessageBox = document.getElementById('formMessageBox');
+        const formMessageBoxTitle = document.getElementById('formMessageBoxTitle');
+        const formMessageBoxText = document.getElementById('formMessageBoxText');
+
+        let editingChallengeId = null;
+
+        // --- Utility Functions ---
+        async function callApi(action, method = 'GET', data = null) {
+            const url = `${API_URL}?action=${action}`;
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error(`API Call Error (${action}):`, error);
+                showFormMessage(`Error: ${error.message}`, 'error', 'API Error');
+                return { success: false, error: error.message };
+            }
+        }
+
+        function showFormMessage(text, type, title = '') {
+            formMessageBoxTitle.textContent = title;
+            formMessageBoxText.textContent = text;
+            formMessageBox.className = 'message-box visible';
+            formMessageBox.classList.add(type);
+        }
+
+        function hideFormMessage() {
+            formMessageBox.className = 'message-box';
+        }
+
+        function showModal() {
+            challengeModal.classList.add('visible');
+            hideFormMessage();
+        }
+
+        function hideModal() {
+            challengeModal.classList.remove('visible');
+            challengeForm.reset(); // Clear form fields
+            editingChallengeId = null;
+            saveChallengeBtn.textContent = 'Add Challenge';
+            modalTitle.textContent = 'Add New Challenge';
+        }
+
+        // --- CRUD Operations ---
+
+        // Fetch and display challenges
+        async function fetchChallenges() {
+            challengesTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center;">Loading challenges...</td></tr>';
+            const response = await callApi('get_all_challenges_admin');
+            if (response.success && Array.isArray(response.challenges)) {
+                renderChallengesTable(response.challenges);
+            } else {
+                challengesTableBody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: var(--neon-pink);">Failed to load challenges: ${response.error || 'Unknown error'}</td></tr>`;
+            }
+        }
+
+        // Render challenges into the table
+        function renderChallengesTable(challenges) {
+            challengesTableBody.innerHTML = ''; // Clear existing rows
+            if (challenges.length === 0) {
+                challengesTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center;">No challenges found. Add some!</td></tr>';
+                return;
+            }
+
+            challenges.forEach(challenge => {
+                const row = challengesTableBody.insertRow();
+                row.dataset.id = challenge.id; // Store ID for easy access
+
+                row.insertCell().textContent = challenge.id;
+                row.insertCell().textContent = challenge.name;
+                row.insertCell().textContent = challenge.category;
+                row.insertCell().textContent = challenge.points;
+                row.insertCell().textContent = challenge.flag;
+                row.insertCell().textContent = challenge.solves;
+                row.insertCell().textContent = challenge.active ? 'Yes' : 'No';
+                
+                const linkCell = row.insertCell();
+                if (challenge.link) {
+                    const linkAnchor = document.createElement('a');
+                    linkAnchor.href = challenge.link;
+                    linkAnchor.target = '_blank';
+                    linkAnchor.textContent = 'Link';
+                    linkAnchor.style.color = 'var(--neon-blue)';
+                    linkCell.appendChild(linkAnchor);
+                } else {
+                    linkCell.textContent = 'N/A';
+                }
+
+                row.insertCell().textContent = challenge.day_label || 'N/A';
+
+                const actionsCell = row.insertCell();
+                actionsCell.className = 'action-buttons';
+
+                const editBtn = document.createElement('button');
+                editBtn.className = 'btn-edit';
+                editBtn.innerHTML = '<i class="fas fa-edit"></i> Edit';
+                editBtn.onclick = () => editChallenge(challenge.id);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn-delete';
+                deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+                deleteBtn.onclick = () => confirmDeleteChallenge(challenge.id, challenge.name);
+
+                actionsCell.appendChild(editBtn);
+                actionsCell.appendChild(deleteBtn);
+            });
+        }
+
+        // Handle Add New Challenge button click
+        addChallengeBtn.addEventListener('click', () => {
+            hideModal(); // Ensure modal is clean slate
+            modalTitle.textContent = 'Add New Challenge';
+            saveChallengeBtn.textContent = 'Add Challenge';
+            document.getElementById('challengeId').value = '';
+            // Reset active checkbox to default checked for new challenges
+            document.getElementById('active').checked = true;
+            showModal();
+        });
+
+        // Handle Edit Challenge
+        async function editChallenge(id) {
+            const response = await callApi('get_challenge_by_id', 'GET', { id: id });
+            if (response.success && response.challenge) {
+                const challenge = response.challenge;
+                editingChallengeId = challenge.id;
+                modalTitle.textContent = 'Edit Challenge';
+                saveChallengeBtn.textContent = 'Update Challenge';
+
+                // Populate form fields
+                document.getElementById('challengeId').value = challenge.id;
+                document.getElementById('name').value = challenge.name;
+                document.getElementById('category').value = challenge.category;
+                document.getElementById('points').value = challenge.points;
+                document.getElementById('description').value = challenge.description || '';
+                document.getElementById('flag').value = challenge.flag;
+                document.getElementById('solves').value = challenge.solves;
+                document.getElementById('active').checked = challenge.active;
+                document.getElementById('link').value = challenge.link || '';
+                document.getElementById('day_label').value = challenge.day_label || '';
+                document.getElementById('story').value = challenge.story || '';
+                document.getElementById('learning_objectives_json').value = challenge.learning_objectives_json || '';
+                document.getElementById('learning_details_html').value = challenge.learning_details_html || '';
+                document.getElementById('resources_json').value = challenge.resources_json || '';
+                document.getElementById('questions_json').value = challenge.questions_json || '';
+                document.getElementById('machine_link').value = challenge.machine_link || '';
+
+                showModal();
+            } else {
+                showFormMessage(`Failed to fetch challenge for editing: ${response.error || 'Unknown error'}`, 'error', 'Fetch Error');
+            }
+        }
+
+        // Handle form submission (Add/Update)
+        challengeForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            hideFormMessage();
+
+            const formData = new FormData(challengeForm);
+            const data = {};
+            for (const [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            // Convert 'active' checkbox to boolean
+            data.active = document.getElementById('active').checked ? 1 : 0;
+            // Ensure numeric fields are numbers
+            data.points = parseInt(data.points, 10);
+            data.solves = parseInt(data.solves, 10);
+
+            // Handle optional JSON fields
+            const jsonFields = ['learning_objectives_json', 'resources_json', 'questions_json'];
+            jsonFields.forEach(field => {
+                if (data[field]) {
+                    try {
+                        // Attempt to parse and then stringify to ensure it's valid JSON
+                        data[field] = JSON.stringify(JSON.parse(data[field]));
+                    } catch (e) {
+                        showFormMessage(`Invalid JSON in ${field}: ${e.message}`, 'error', 'Validation Error');
+                        return; // Stop submission if JSON is invalid
+                    }
+                } else {
+                    data[field] = null; // Store as NULL if empty
+                }
+            });
+
+
+            let response;
+            if (editingChallengeId) {
+                data.id = editingChallengeId; // Ensure ID is part of update payload
+                response = await callApi('update_challenge', 'POST', data);
+            } else {
+                response = await callApi('add_challenge', 'POST', data);
+            }
+
+            if (response.success) {
+                showFormMessage(`Challenge ${editingChallengeId ? 'updated' : 'added'} successfully!`, 'success', 'Success!');
+                await fetchChallenges(); // Refresh table
+                setTimeout(hideModal, 1500); // Hide modal after a short delay
+            } else {
+                showFormMessage(`Operation failed: ${response.error || 'Unknown error'}`, 'error', 'Operation Failed');
+            }
+        });
+
+        // Confirm Delete Challenge
+        function confirmDeleteChallenge(id, name) {
+            if (confirm(`Are you sure you want to delete the challenge "${name}" (ID: ${id})? This action cannot be undone.`)) {
+                deleteChallenge(id);
+            }
+        }
+
+        // Delete Challenge
+        async function deleteChallenge(id) {
+            const response = await callApi('delete_challenge', 'POST', { id: id });
+            if (response.success) {
+                alert('Challenge deleted successfully!'); // Simple alert for deletion
+                await fetchChallenges(); // Refresh table
+            } else {
+                alert(`Failed to delete challenge: ${response.error || 'Unknown error'}`);
+            }
+        }
+
+        // Close modal listeners
+        closeModalBtn.addEventListener('click', hideModal);
+        cancelFormBtn.addEventListener('click', hideModal);
+        window.addEventListener('click', (event) => {
+            if (event.target === challengeModal) {
+                hideModal();
+            }
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', fetchChallenges);
+    </script>
+</body>
+</html>
