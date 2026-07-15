@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTF Challenges | Sudo Society</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* Color Variables */
+        :root {
+            --neon-green: #00ff88;
+            --neon-pink: #ff00c8;
+            --neon-blue: #00ffff;
+            --dark-bg: #0a0a0a;
+            --darker-bg: #050505;
+            --card-bg: rgba(20, 20, 20, 0.7);
+            --glow: 0 0 15px rgba(0, 255, 136, 0.5);
+            --glow-intense: 0 0 25px rgba(0, 255, 136, 0.9);
+            --dim-color: rgba(192, 252, 204, 0.3);
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: var(--dark-bg);
+            color: #c0fccc;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            background-image: radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.05) 0%, transparent 25%),
+                              radial-gradient(circle at 80% 70%, rgba(0, 200, 255, 0.05) 0%, transparent 25%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem; /* Default horizontal padding */
+            width: 100%;
+        }
+
+        /* Scanline Effect */
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to bottom, transparent, var(--neon-green), transparent);
+            animation: scan 4s linear infinite;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        @keyframes scan {
+            0% { top: -2px; }
+            100% { top: 100%; }
+        }
+
+        /* Header */
+        header {
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow header content to wrap on smaller screens */
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+        }
+
+        .logo-img {
+            height: 40px;
+            filter: drop-shadow(0 0 8px var(--neon-green));
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--neon-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: var(--glow);
+        }
+
+        /* Filter Buttons */
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap; /* Allow buttons to wrap */
+            gap: 0.8rem;
+            justify-content: center; /* Center buttons when wrapped */
+        }
+
+        .filter-btn {
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 5px;
+            padding: 0.6rem 1.2rem;
+            color: #c0fccc;
+            font-size: 0.9rem;
+            font-family: 'Share Tech Mono', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+            color: var(--neon-green);
+        }
+
+        .filter-btn.active {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--neon-green);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Main Content */
+        main.container {
+            padding-top: 2rem;
+            padding-bottom: 3rem;
+            flex-grow: 1;
+        }
+
+        .challenges-grid {
+            display: grid;
+            /* Responsive grid: auto-fit creates as many columns as fit,
+               minmax ensures cards are at least 280px wide but can grow */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .challenge-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease-out;
+            z-index: 0;
+        }
+
+        .challenge-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-green);
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.1);
+        }
+
+        .challenge-card.active {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+            transform: translateY(-8px);
+            z-index: 10;
+        }
+
+        .challenge-card.dimmed {
+            opacity: 0.5;
+            background: rgba(10, 10, 10, 0.1);
+            border-color: rgba(0, 255, 136, 0.05);
+        }
+
+        .challenge-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .challenge-card .category {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--neon-green);
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .challenge-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .challenge-card .points {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .challenge-card .solves {
+            font-size: 0.9rem;
+            color: rgba(192, 252, 204, 0.7);
+        }
+
+        .challenge-card.solved {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+            opacity: 0.8;
+        }
+
+        .solved-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--neon-green);
+            color: var(--dark-bg);
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--neon-blue);
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 700px;
+            width: 90%; /* Responsive width */
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            max-height: 90vh; /* Limit height to prevent overflow on small screens */
+            overflow-y: auto; /* Enable scrolling if content is too long */
+        }
+
+        .modal-overlay.visible .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: rgba(0, 255, 255, 0.7);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--neon-blue);
+        }
+
+        .modal-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .modal-content p {
+            background: rgba(10, 10, 10, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .modal-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow info items to wrap */
+            gap: 1rem;
+            font-size: 1rem;
+            color: rgba(192, 252, 204, 0.8);
+            margin-bottom: 1rem;
+        }
+
+        .modal-info p strong, .modal-info span {
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Modal Link Section Styles */
+        .modal-link-section {
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .modal-link-section a {
+            display: inline-block;
+            background: rgba(0, 200, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .modal-link-section a:hover {
+            background: var(--neon-blue);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--neon-blue);
+            transform: translateY(-2px);
+        }
+
+        .modal-flag-input {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap; /* Allow input and button to wrap */
+        }
+
+        .modal-flag-input input[type="text"] {
+            flex-grow: 1; /* Allows input to take available space */
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 5px;
+            padding: 0.8rem 1rem;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--neon-green);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            min-width: 150px; /* Ensures input is not too small */
+        }
+
+        .modal-flag-input input[type="text"]::placeholder {
+            color: rgba(192, 252, 204, 0.5);
+        }
+
+        .modal-flag-input input[type="text"]:focus {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .modal-flag-input button {
+            background: var(--neon-blue);
+            color: var(--dark-bg);
+            border: none;
+            border-radius: 5px;
+            padding: 0.8rem 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .modal-flag-input button:hover {
+            background: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
+        }
+
+        .modal-flag-input button:disabled {
+            background-color: #555;
+            color: #bbb;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .message-box {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .message-box.visible {
+            display: block;
+        }
+
+        .message-box.success {
+            background-color: rgba(0, 255, 136, 0.15);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+        }
+
+        .message-box.error {
+            background-color: rgba(255, 0, 200, 0.15);
+            border: 1px solid var(--neon-pink);
+            color: var(--neon-pink);
+        }
+
+        .message-box h3 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        /* --- Responsive Adjustments --- */
+        /* For screens smaller than 768px (common tablet breakpoint) */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem; /* Reduce horizontal padding on smaller screens */
+            }
+
+            header .container {
+                flex-direction: column; /* Stack logo and filter buttons vertically */
+                text-align: center;
+                gap: 1.5rem; /* Increase gap for better separation */
+            }
+
+            .logo {
+                justify-content: center; /* Center logo on small screens */
+            }
+
+            .filter-buttons {
+                flex-direction: column; /* Stack filter buttons vertically */
+                width: 100%; /* Make buttons take full width */
+            }
+            .filter-btn {
+                width: 100%; /* Ensure each button spans full width */
+                font-size: 1rem; /* Slightly larger font for easier tapping */
+                padding: 0.8rem 1.2rem; /* More vertical padding */
+            }
+
+            .challenges-grid {
+                /* Adjust minmax for mobile: cards can be smaller, but still fill space */
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem; /* Reduce gap between cards */
+            }
+
+            .challenge-card {
+                padding: 1rem; /* Reduce card padding */
+            }
+
+            .challenge-card h3 {
+                font-size: 1.3rem; /* Adjust heading font size */
+            }
+
+            .challenge-card .points,
+            .challenge-card .solves {
+                font-size: 0.85rem; /* Adjust info font sizes */
+            }
+
+            .modal-content {
+                padding: 1.5rem; /* Reduce modal padding */
+                width: 95%; /* Keep modal width generous */
+            }
+
+            .modal-content h2 {
+                font-size: 1.5rem; /* Adjust modal title font size */
+            }
+
+            .modal-content p {
+                padding: 1rem; /* Adjust modal description padding */
+                font-size: 0.9rem; /* Adjust modal description font size */
+            }
+
+            .modal-info {
+                flex-direction: column; /* Stack modal info items vertically */
+                gap: 0.5rem; /* Reduce gap between stacked info items */
+                font-size: 0.9rem; /* Adjust modal info font size */
+            }
+
+            .modal-flag-input {
+                flex-direction: column; /* Stack flag input and button vertically */
+                gap: 0.8rem;
+            }
+            .modal-flag-input input[type="text"],
+            .modal-flag-input button {
+                width: 100%; /* Make input and button take full width */
+                padding: 0.8rem 1rem; /* More vertical padding for tap targets */
+            }
+
+            .message-box {
+                padding: 0.8rem; /* Adjust message box padding */
+                font-size: 0.9rem; /* Adjust message box font size */
+            }
+            .message-box h3 {
+                font-size: 1rem; /* Adjust message box title font size */
+            }
+        }
+
+        /* For very small screens (e.g., older phones, narrow viewports) */
+        @media (max-width: 480px) {
+            body {
+                padding-top: 0.5rem; /* Small padding for body to avoid content touching edges */
+            }
+            .container {
+                padding: 0 0.5rem; /* Even less horizontal padding */
+            }
+            .logo-text {
+                font-size: 1.2rem; /* Smaller logo text */
+            }
+            .logo-img {
+                height: 35px; /* Smaller logo image */
+            }
+            .challenge-card h3 {
+                font-size: 1.1rem; /* Further reduce challenge title font size */
+            }
+            .challenge-card .category {
+                font-size: 0.7rem; /* Smaller category text */
+                padding: 0.2rem 0.4rem;
+            }
+            .challenge-card .points,
+            .challenge-card .solves {
+                font-size: 0.8rem; /* Further reduce info font sizes */
+            }
+            .modal-content {
+                padding: 1rem; /* Minimal modal padding */
+            }
+            .modal-content h2 {
+                font-size: 1.3rem; /* Smallest modal title */
+            }
+            .close-btn {
+                font-size: 1.5rem; /* Smaller close button */
+                top: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+
+    <header>
+        <div class="container">
+            <div class="logo" onclick="window.location.href='index.html'">
+                <img src="sudo_society.png" alt="Sudo Society" class="logo-img">
+                <span class="logo-text">CTF Challenges</span>
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-category="all">ALL</button>
+                <button class="filter-btn" data-category="web">WEB</button>
+                <button class="filter-btn" data-category="pwn">PWN</button>
+                <button class="filter-btn" data-category="crypto">CRYPTO</button>
+                <button class="filter-btn" data-category="reversing">REVERSING</button>
+                <button class="filter-btn" data-category="misc">MISC</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="challenges-grid" id="challengesGrid">
+            <div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--dim-color);">Loading challenges...</div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="challengeModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">&times;</button>
+            <h2 id="modalChallengeTitle"></h2>
+            <p id="modalChallengeDescription"></p>
+            <div class="modal-info">
+                <p>Category: <span id="modalChallengeCategory"></span></p>
+                <p>Points: <span id="modalChallengePoints"></span></p>
+                <p>Solves: <span id="modalChallengeSolves"></span></p>
+            </div>
+
+            <div id="modalLinkSection" class="modal-link-section" style="display: none;">
+                <a id="modalChallengeLink" href="#" target="_blank">Access Challenge Files/Link <i class="fas fa-external-link-alt"></i></a>
+            </div>
+
+            <div class="modal-flag-input" id="flagInputSection">
+                <input type="text" id="flagInput" placeholder="Enter your flag here...">
+                <button id="submitFlagBtn">SUBMIT FLAG</button>
+            </div>
+
+            <div class="message-box" id="modalMessageBox">
+                <h3 id="messageBoxTitle"></h3>
+                <p id="messageBoxText"></p>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // --- Configuration ---
+    // IMPORTANT: Adjust this to the URL of your challenge.php file.
+    const API_URL = 'http://192.168.1.2/Sudo_society_beta/api/challenge.php'; // <--- **VERIFY AND ADJUST THIS LINE!**
+    // Example if challenge.php is directly in your web server root: 'http://localhost/challenge.php'
+    // Example if challenge.php is in a subfolder named 'api': 'http://localhost/api/challenge.php'
+
+    // DOM Elements
+    const challengesGrid = document.getElementById('challengesGrid');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const challengeModal = document.getElementById('challengeModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const modalChallengeTitle = document.getElementById('modalChallengeTitle');
+    const modalChallengeCategory = document.getElementById('modalChallengeCategory');
+    const modalChallengePoints = document.getElementById('modalChallengePoints');
+    const modalChallengeSolves = document.getElementById('modalChallengeSolves');
+    const modalChallengeDescription = document.getElementById('modalChallengeDescription');
+    const modalLinkSection = document.getElementById('modalLinkSection');
+    const modalChallengeLink = document.getElementById('modalChallengeLink');
+    const flagInputSection = document.getElementById('flagInputSection');
+    const flagInput = document.getElementById('flagInput');
+    const submitFlagBtn = document.getElementById('submitFlagBtn');
+    const modalMessageBox = document.getElementById('modalMessageBox');
+    const messageBoxTitle = document.getElementById('messageBoxTitle');
+    const messageBoxText = document.getElementById('messageBoxText');
+
+    // Global State
+    let allChallenges = [];
+    let activeChallengeId = null;
+
+    // --- API Helper Function ---
+    async function callApi(action, method = 'GET', data = null) {
+        console.log(`[API Call] Attempting to call action: ${action} with method: ${method}`);
+        const url = new URL(API_URL);
+        url.searchParams.append('action', action);
+
+        const options = { method: method };
+        if (method === 'POST' && data) {
+            options.headers = { 'Content-Type': 'application/json' };
+            options.body = JSON.stringify(data);
+        }
+
+        try {
+            const response = await fetch(url, options);
+            console.log(`[API Call] Response status for ${action}: ${response.status}`);
+
+            if (!response.ok) {
+                let errorDetails = `HTTP error! Status: ${response.status}`;
+                try {
+                    const errorBody = await response.json();
+                    errorDetails = errorBody.error || errorBody.message || errorDetails;
+                } catch (jsonError) {
+                    // response was not JSON, use default error message
+                }
+                throw new Error(errorDetails);
+            }
+
+            const result = await response.json();
+            if (!result.success) {
+                throw new Error(result.message || result.error || 'API call failed (backend reported failure).');
+            }
+            console.log(`[API Call] Success for ${action}:`, result);
+            return result.data || result; // API might return data in 'data' or directly
+        } catch (error) {
+            console.error(`[API Call] Failed to call ${action}:`, error);
+            challengesGrid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--neon-pink);">
+                    Error: Failed to load challenges. Please check your network connection and server setup.
+                </div>
+            `;
+            // Additionally, if the modal is open, show an error there too
+            if (challengeModal.classList.contains('visible')) {
+                showModalMessage("Connection Error", "Failed to communicate with the server. Please try again later.", "error");
+            }
+            return null;
+        }
+    }
+
+    // --- Fetch Challenges from Backend ---
+    async function fetchChallenges() {
+        console.log("[Fetch] Starting fetchChallenges...");
+        challengesGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 50px;">Loading challenges...</div>';
+        const data = await callApi('getChallenges');
+        if (data && Array.isArray(data)) {
+            allChallenges = data.map(ch => ({ ...ch, solved: ch.solved || false }));
+            console.log("[Fetch] Challenges loaded and parsed:", allChallenges);
+            if (allChallenges.length === 0) {
+                 challengesGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: rgba(192, 252, 204, 0.6);">No challenges found in the database. Add some challenges.</div>';
+            } else {
+                // Render challenges based on the currently active filter, or all if no filter active
+                const activeFilterBtn = document.querySelector('.filter-btn.active');
+                const currentCategory = activeFilterBtn ? activeFilterBtn.dataset.category : 'all';
+                if (currentCategory === 'all') {
+                    renderChallenges(allChallenges);
+                } else {
+                    renderChallenges(allChallenges.filter(c => c.category === currentCategory));
+                }
+            }
+        } else {
+            console.error("[Fetch] No valid data received from getChallenges API or it's not an array. Data:", data);
+            challengesGrid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--neon-pink);">
+                    Error: Did not receive valid challenge data from the backend. Check your ` + '`challenge.php`' + ` response.
+                </div>
+            `;
+        }
+    }
+
+    // Render Challenges based on the filtered list
+    function renderChallenges(challengesToRender) {
+        console.log("[Render] Rendering challenges:", challengesToRender.length, "items.");
+        challengesGrid.innerHTML = '';
+        if (challengesToRender.length === 0) {
+             challengesGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: rgba(192, 252, 204, 0.6);">No challenges found for this category.</div>';
+             return;
+        }
+        challengesToRender.forEach(challenge => {
+            const card = document.createElement('div');
+            card.className = 'challenge-card';
+            card.dataset.id = challenge.id;
+            if (challenge.solved) {
+                card.classList.add('solved');
+            }
+            card.innerHTML = `
+                <span class="category">${challenge.category.toUpperCase()}</span>
+                <h3>${challenge.title}</h3>
+                <div class="points">${challenge.points} POINTS</div>
+                <div>${challenge.solves || 0} SOLVES</div>
+                ${challenge.solved ? '<div class="solved-indicator">SOLVED</div>' : ''}
+            `;
+            challengesGrid.appendChild(card);
+        });
+    }
+
+    // Set active challenge (for highlighting in grid)
+    function setActiveChallenge(id) {
+        console.log(`[Active Challenge] Setting active challenge ID: ${id}`);
+        activeChallengeId = id; // Assigns to the global variable
+        document.querySelectorAll('.challenge-card').forEach(card => {
+            if (parseInt(card.dataset.id) === id) {
+                card.classList.add('active');
+            } else {
+                card.classList.remove('active');
+            }
+        });
+    }
+
+    // Show Challenge Details Modal
+    function showChallengeDetails(challenge) {
+        console.log("[Modal] Attempting to show modal for challenge:", challenge.title, "ID:", challenge.id);
+        modalChallengeTitle.textContent = challenge.title;
+        modalChallengeCategory.textContent = challenge.category.toUpperCase();
+        modalChallengePoints.textContent = challenge.points;
+        modalChallengeSolves.textContent = challenge.solves || 0;
+        modalChallengeDescription.textContent = challenge.description || 'No detailed description available for this challenge.';
+
+        if (challenge.link && challenge.link.trim() !== '') {
+            modalChallengeLink.href = challenge.link;
+            modalLinkSection.style.display = 'block';
+            console.log("[Modal] Challenge link displayed:", challenge.link);
+        } else {
+            modalLinkSection.style.display = 'none';
+            console.log("[Modal] No challenge link to display.");
+        }
+
+        flagInput.value = '';
+
+        modalMessageBox.classList.remove('visible', 'success', 'error');
+        if (challenge.solved) {
+            flagInputSection.style.display = 'none';
+            showModalMessage("CONGRATULATIONS!", "You've successfully solved this challenge. Well done, hacker!", 'success');
+            console.log("[Modal] Challenge already solved, hiding input.");
+        } else {
+            flagInputSection.style.display = 'flex';
+            console.log("[Modal] Challenge not solved, showing input.");
+        }
+
+        challengeModal.classList.add('visible');
+        console.log("[Modal] Added 'visible' class to challengeModal. Current classes:", challengeModal.classList);
+    }
+
+    // Hide Challenge Details Modal
+    function hideChallengeDetails() {
+        console.log("[Modal] Hiding modal.");
+        challengeModal.classList.remove('visible');
+        document.querySelectorAll('.challenge-card').forEach(card => {
+            card.classList.remove('active', 'dimmed');
+        });
+        modalMessageBox.classList.remove('visible', 'success', 'error');
+        flagInputSection.style.display = 'flex'; // Ensure input is visible for next challenge
+        modalLinkSection.style.display = 'none';
+        activeChallengeId = null;
+    }
+
+    // Display messages in the modal (success/error)
+    function showModalMessage(title, text, type) {
+        console.log(`[Modal Message] Displaying message: ${title} (${type})`);
+        messageBoxTitle.textContent = title;
+        messageBoxText.textContent = text;
+        modalMessageBox.className = 'message-box visible ' + type;
+    }
+
+    // --- Event Listeners ---
+
+    // Event Listener for Challenge Card Clicks (to open modal)
+    challengesGrid.addEventListener('click', (e) => {
+        console.log("[Click Event] Click detected on challengesGrid.");
+        const card = e.target.closest('.challenge-card');
+        if (card) {
+            console.log("[Click Event] Clicked on a challenge card.");
+            const challengeId = parseInt(card.dataset.id);
+            console.log("[Click Event] Extracted challenge ID from card:", card.dataset.id, "Parsed as int:", challengeId, "Type:", typeof challengeId);
+
+            if (!Array.isArray(allChallenges) || allChallenges.length === 0) {
+                console.warn("[Click Event] allChallenges array is empty or not an array. Cannot find challenge data. Attempting to re-fetch.");
+                fetchChallenges(); // Try to re-fetch if array is empty
+                showModalMessage("Error", "Challenges data not loaded yet. Please wait a moment and try again.", "error");
+                return;
+            }
+
+            const selectedChallenge = allChallenges.find(c => c.id === challengeId);
+
+            if (selectedChallenge) {
+                console.log("[Click Event] Found selected challenge:", selectedChallenge.title, "ID:", selectedChallenge.id);
+                setActiveChallenge(challengeId);
+                showChallengeDetails(selectedChallenge);
+            } else {
+                console.error("[Click Event] Challenge data not found for ID:", challengeId, "in allChallenges array. This might mean the data was not fetched correctly or the ID is mismatched.");
+                console.log("Current allChallenges data:", allChallenges);
+                showModalMessage("Error", "Challenge details could not be loaded. Please try again.", "error");
+            }
+        } else {
+            console.log("[Click Event] Click was not directly on a challenge card.");
+        }
+    });
+
+    // Event Listener for closing modal
+    closeModalBtn.addEventListener('click', hideChallengeDetails);
+    challengeModal.addEventListener('click', (e) => {
+        if (e.target === challengeModal) {
+            hideChallengeDetails();
+        }
+    });
+
+    // Flag Submission Logic
+    submitFlagBtn.addEventListener('click', async () => {
+        console.log("[Flag Submit] Submit flag button clicked.");
+        // Disable button to prevent multiple submissions
+        submitFlagBtn.disabled = true;
+        submitFlagBtn.textContent = 'Submitting...';
+
+        const enteredFlag = flagInput.value.trim();
+        const currentChallenge = allChallenges.find(c => c.id === activeChallengeId);
+
+        if (!enteredFlag) {
+            showModalMessage("Input Required", "Please enter a flag to submit.", 'error');
+            submitFlagBtn.disabled = false;
+            submitFlagBtn.textContent = 'SUBMIT FLAG';
+            return;
+        }
+
+        if (currentChallenge) {
+            if (currentChallenge.solved) {
+                showModalMessage("ALREADY SOLVED!", "You've already solved this challenge. Great job!", 'success');
+                flagInputSection.style.display = 'none';
+                submitFlagBtn.disabled = false;
+                submitFlagBtn.textContent = 'SUBMIT FLAG';
+                return;
+            }
+
+            console.log(`[Flag Submit] Submitting flag for challenge ID ${activeChallengeId}: "${enteredFlag}"`);
+            const result = await callApi('submitFlag', 'POST', {
+                challenge_id: activeChallengeId,
+                flag: enteredFlag
+            });
+
+            if (result && result.success) {
+                console.log("[Flag Submit] Flag correct!");
+                flagInputSection.style.display = 'none';
+                showModalMessage("CONGRATULATIONS!", result.message + " Well done, hacker!", 'success');
+
+                // Re-fetch all challenges to get updated solves counts and solved status
+                await fetchChallenges();
+                // After re-fetch, find the current challenge again to ensure its data is fresh
+                const updatedChallenge = allChallenges.find(c => c.id === activeChallengeId);
+                if (updatedChallenge) {
+                    modalChallengeSolves.textContent = updatedChallenge.solves; // Update solves count in modal
+                }
+
+                // Update the 'solved' status for the current challenge in the local 'allChallenges' array
+                const index = allChallenges.findIndex(c => c.id === activeChallengeId);
+                if (index !== -1) {
+                    allChallenges[index].solved = true;
+                }
+
+                setActiveChallenge(activeChallengeId); // Keep the active card highlighted
+                // Re-render the grid to update the "SOLVED" indicator on the card
+                const activeFilterBtn = document.querySelector('.filter-btn.active');
+                const currentCategory = activeFilterBtn ? activeFilterBtn.dataset.category : 'all';
+                if (currentCategory === 'all') {
+                    renderChallenges(allChallenges);
+                } else {
+                    renderChallenges(allChallenges.filter(c => c.category === currentCategory));
+                }
+
+            } else {
+                console.log("[Flag Submit] Flag incorrect or API reported failure.");
+                flagInput.value = '';
+                showModalMessage("FLAG INCORRECT!", (result && result.message) || "That's not quite right. Keep trying, you'll get it!", 'error');
+            }
+        } else {
+            console.error("[Flag Submit] No active challenge found for flag submission (activeChallengeId is null or challenge not in array).");
+            showModalMessage("Error", "Could not process flag submission. Challenge data missing.", "error");
+        }
+
+        // Re-enable button after API call completes (success or failure)
+        submitFlagBtn.disabled = false;
+        submitFlagBtn.textContent = 'SUBMIT FLAG';
+    });
+
+    // Filter functionality
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            console.log("[Filter] Filter button clicked:", btn.dataset.category);
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const category = btn.dataset.category;
+            renderChallenges(category === 'all' ? allChallenges : allChallenges.filter(c => c.category === category));
+
+            hideChallengeDetails(); // Close modal when filter changes
+        });
+    });
+
+    // --- Initialize on page load ---
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("[Init] DOMContentLoaded event fired. Fetching challenges...");
+        fetchChallenges();
+    });
+</script>
+</body>
+</html>

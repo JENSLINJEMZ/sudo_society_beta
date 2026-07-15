@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Sudo Society CTF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/register.css">
+</head>
+<body>
+  <div class="scanline"></div>
+
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo" onclick="window.location.href='index.html'">
+          <img src="sudo_society.png" alt="Sudo Society Logo" class="logo-img">
+          <span class="logo-text">Sudo Society</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="register-container">
+      <div class="container">
+        <div class="register-box">
+          <h1 class="register-title">CREATE ACCOUNT</h1>
+
+          <div class="message-box" id="registerMessageBox" style="display: none;">
+            <p id="registerMessageText"></p>
+          </div>
+
+          <form id="registerForm"> <div class="form-group">
+              <label for="username">USERNAME</label>
+              <input type="text" id="username" name="username" class="form-control" placeholder="hacker1337" required minlength="4" maxlength="16">
+              <div class="error-message" id="usernameError">Username must be 4-16 characters.</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="email">EMAIL</label>
+              <input type="email" id="email" name="email" class="form-control" placeholder="hacker@sudo.society" required>
+              <div class="error-message" id="emailError">Please enter a valid email address.</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="password">PASSWORD</label>
+              <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required minlength="8">
+              <div class="error-message" id="passwordError">Password must be at least 8 characters long.</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="confirmPassword">CONFIRM PASSWORD</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="••••••••" required>
+              <div class="error-message" id="confirmPasswordError">Passwords do not match.</div>
+            </div>
+            
+            <div class="checkbox-group">
+              <input type="checkbox" id="terms" required>
+              <label for="terms">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+              <div class="error-message" id="termsError" style="display:none; color: var(--neon-pink); margin-left: 10px;">You must agree to the terms.</div>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="registerBtn">REGISTER</button>
+            
+            <div class="login-link">
+              Already have an account? <a href="login.html">Login</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p class="copyright">© 2023 Sudo Society. All rights reserved. Developed by JENSLIN</p>
+    </div>
+  </footer>
+
+  <script>
+    // --- Configuration ---
+    const API_URL = 'http://192.168.1.2/Sudo_society/api/register.php'; // <--- **VERIFY AND ADJUST THIS LINE!**
+
+    // DOM Elements
+    const registerForm = document.getElementById('registerForm');
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const termsCheckbox = document.getElementById('terms');
+    const registerBtn = document.getElementById('registerBtn');
+    const registerMessageBox = document.getElementById('registerMessageBox');
+    const registerMessageText = document.getElementById('registerMessageText');
+
+    // Error message elements for specific fields
+    const usernameError = document.getElementById('usernameError');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+    const termsError = document.getElementById('termsError');
+
+    // --- Helper Function to Display Messages ---
+    function showRegisterMessage(message, type) {
+        registerMessageText.textContent = message;
+        registerMessageBox.className = 'message-box ' + type;
+        registerMessageBox.style.display = 'block';
+        setTimeout(() => {
+            registerMessageBox.style.display = 'none';
+        }, 5000); // Hide message after 5 seconds
+    }
+
+    // --- Validation Functions ---
+    function validateUsername() {
+        const value = usernameInput.value.trim();
+        const parent = usernameInput.parentElement;
+        if (value.length < 4 || value.length > 16) {
+            parent.classList.add('error');
+            parent.classList.remove('success');
+            usernameError.style.display = 'block';
+            return false;
+        } else {
+            parent.classList.remove('error');
+            parent.classList.add('success');
+            usernameError.style.display = 'none';
+            return true;
+        }
+    }
+
+    function validateEmail() {
+        const value = emailInput.value.trim();
+        const parent = emailInput.parentElement;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            parent.classList.add('error');
+            parent.classList.remove('success');
+            emailError.style.display = 'block';
+            return false;
+        } else {
+            parent.classList.remove('error');
+            parent.classList.add('success');
+            emailError.style.display = 'none';
+            return true;
+        }
+    }
+
+    function validatePassword() {
+        const value = passwordInput.value;
+        const parent = passwordInput.parentElement;
+        if (value.length < 8) {
+            parent.classList.add('error');
+            parent.classList.remove('success');
+            passwordError.style.display = 'block';
+            return false;
+        } else {
+            parent.classList.remove('error');
+            parent.classList.add('success');
+            passwordError.style.display = 'none';
+            return true;
+        }
+    }
+
+    function validateConfirmPassword() {
+        const passwordValue = passwordInput.value;
+        const confirmPasswordValue = confirmPasswordInput.value;
+        const parent = confirmPasswordInput.parentElement;
+        if (confirmPasswordValue !== passwordValue || confirmPasswordValue.length === 0) {
+            parent.classList.add('error');
+            parent.classList.remove('success');
+            confirmPasswordError.style.display = 'block';
+            return false;
+        } else {
+            parent.classList.remove('error');
+            parent.classList.add('success');
+            confirmPasswordError.style.display = 'none';
+            return true;
+        }
+    }
+
+    function validateTerms() {
+        if (!termsCheckbox.checked) {
+            termsError.style.display = 'block';
+            return false;
+        } else {
+            termsError.style.display = 'none';
+            return true;
+        }
+    }
+
+    // --- Event Listeners for Live Validation ---
+    usernameInput.addEventListener('blur', validateUsername);
+    emailInput.addEventListener('blur', validateEmail);
+    passwordInput.addEventListener('blur', validatePassword);
+    confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
+    passwordInput.addEventListener('input', validateConfirmPassword); // Re-validate confirm password if password changes
+    termsCheckbox.addEventListener('change', validateTerms);
+
+    // --- Registration Form Submission Handler ---
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Prevent default form submission
+
+        // Run all validations on submit
+        const isUsernameValid = validateUsername();
+        const isEmailValid = validateEmail();
+        const isPasswordValid = validatePassword();
+        const isConfirmPasswordValid = validateConfirmPassword();
+        const areTermsAccepted = validateTerms();
+
+        // If any client-side validation fails, stop here
+        if (!isUsernameValid || !isEmailValid || !isPasswordValid || !isConfirmPasswordValid || !areTermsAccepted) {
+            showRegisterMessage("Please correct the errors in the form.", "error");
+            return;
+        }
+
+        // Disable button and show loading state
+        registerBtn.disabled = true;
+        registerBtn.textContent = 'CREATING ACCOUNT...';
+        registerBtn.style.background = 'linear-gradient(45deg, var(--neon-blue), var(--neon-green))';
+
+        const username = usernameInput.value.trim();
+        const email = emailInput.value.trim();
+        const password = passwordInput.value; // Don't trim password
+        const confirmPassword = confirmPasswordInput.value;
+
+        try {
+            const response = await fetch(`${API_URL}?action=register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password, confirmPassword })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showRegisterMessage(result.message || "Registration successful! Redirecting...", "success");
+                registerBtn.textContent = 'ACCESS GRANTED!';
+                registerBtn.style.background = 'linear-gradient(45deg, #00ff00, var(--neon-green))';
+
+                setTimeout(() => {
+                    window.location.href = 'http://192.168.1.2/Sudo_society_beta/dashboard.php'; // Redirect to challenges page after successful registration
+                }, 1500); // Wait a bit before redirecting
+            } else {
+                let errorMessage = result.message || "Registration failed. Please try again.";
+                if (result.errors && Array.isArray(result.errors)) {
+                    errorMessage += "<br>" + result.errors.join("<br>"); // Display multiple errors
+                }
+                showRegisterMessage(errorMessage, "error");
+                registerBtn.textContent = 'REGISTRATION FAILED';
+                registerBtn.style.background = 'linear-gradient(45deg, var(--neon-pink), #ff0011)';
+
+                setTimeout(() => {
+                    registerBtn.textContent = 'REGISTER';
+                    registerBtn.style.background = 'linear-gradient(45deg, var(--neon-green), var(--neon-blue))'; // Reset button style
+                    registerBtn.disabled = false;
+                }, 2000); // Reset button after a delay
+            }
+        } catch (error) {
+            console.error('Registration API call failed:', error);
+            showRegisterMessage("An error occurred during registration. Please try again.", "error");
+            registerBtn.textContent = 'REGISTER';
+            registerBtn.style.background = 'linear-gradient(45deg, var(--neon-green), var(--neon-blue))'; // Reset button style
+            registerBtn.disabled = false;
+        }
+    });
+
+    // --- Initial Check on Page Load (Optional, but good practice) ---
+    // If a user somehow lands on register.html while already logged in, redirect them.
+    document.addEventListener('DOMContentLoaded', async () => {
+        console.log("Register page loaded. Checking login status...");
+        try {
+            const response = await fetch(`${API_URL}?action=checkLoginStatus`);
+            const result = await response.json();
+
+            if (result.success && result.loggedIn) {
+                console.log("User is already logged in:", result.user.username);
+                showRegisterMessage(`You are already logged in as ${result.user.username}. Redirecting...`, "success");
+                registerBtn.disabled = true;
+                registerBtn.textContent = 'ALREADY LOGGED IN';
+                registerBtn.style.background = 'linear-gradient(45deg, #00ff00, var(--neon-green))';
+                setTimeout(() => {
+                    window.location.href = 'http://192.168.1.2/Sudo_society_beta/dashboard.php'; // Redirect to challenges page
+                }, 1500);
+            } else {
+                console.log("User is not logged in, ready for registration.");
+                // Ensure button is enabled and styled correctly if not logged in
+                registerBtn.disabled = false;
+                registerBtn.textContent = 'REGISTER';
+                registerBtn.style.background = 'linear-gradient(45deg, var(--neon-green), var(--neon-blue))';
+            }
+        } catch (error) {
+            console.error("Error checking login status:", error);
+            showRegisterMessage("Could not verify login status. Please proceed with registration.", "error");
+            registerBtn.disabled = false;
+            registerBtn.textContent = 'REGISTER';
+            registerBtn.style.background = 'linear-gradient(45deg, var(--neon-green), var(--neon-blue))';
+        }
+    });
+  </script>
+</body>
+</html>

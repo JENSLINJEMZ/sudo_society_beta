@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams | Sudo Society</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Color Variables - Consistent with other pages */
+        :root {
+            --neon-green: #00ff88;
+            --neon-pink: #ff00c8;
+            --neon-blue: #00ffff;
+            --dark-bg: #0a0a0a;
+            --darker-bg: #050505;
+            --card-bg: rgba(20, 20, 20, 0.7);
+            --border-color: rgba(0, 255, 136, 0.2);
+            --text-light: #c0fccc;
+            --text-dark: #0a0a0a;
+            --glow: 0 0 15px rgba(0, 255, 136, 0.5);
+            --glow-intense: 0 0 25px rgba(0, 255, 136, 0.9);
+            --dim-color: rgba(192, 252, 204, 0.3);
+        }
+
+        /* Global Styles */
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: var(--darker-bg);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            animation: fadeIn 1.5s ease-out;
+            transition: all 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Background Grid Effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(to right, rgba(0, 255, 136, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            animation: panBackground 60s linear infinite;
+        }
+
+        @keyframes panBackground {
+            from { background-position: 0 0; }
+            to { background-position: -1000px -1000px; }
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            margin: 0;
+        }
+
+        .page-header p {
+            color: var(--neon-green);
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            background-color: var(--neon-green);
+            color: var(--dark-bg);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .action-btn:hover {
+            background-color: #00e676; /* Slightly darker green */
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        .action-btn.secondary {
+            background-color: var(--neon-blue);
+            color: var(--dark-bg);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        .action-btn.secondary:hover {
+            background-color: #00e6e6;
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        .action-btn.danger {
+            background-color: var(--neon-pink);
+            color: var(--dark-bg);
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+        .action-btn.danger:hover {
+            background-color: #ff33c8;
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+        
+        .action-btn:disabled {
+            background-color: #333;
+            color: #666;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Team Grid */
+        #teams-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .team-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: var(--glow);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow-intense);
+        }
+        
+        .team-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .team-card-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        .team-card-header-text h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+            color: var(--neon-green);
+            margin: 0;
+            text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+        }
+        .team-card-header-text p {
+             font-size: 0.8em;
+             margin: 0;
+             color: var(--text-light);
+             font-style: italic;
+        }
+        
+        .team-card-members-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--border-color);
+        }
+        
+        .team-card-member {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8em;
+            color: var(--neon-blue);
+            font-weight: bold;
+            text-shadow: 0 0 3px rgba(0, 255, 255, 0.5);
+        }
+        
+        .team-card-member i {
+            color: var(--neon-green);
+        }
+
+        /* Team Detail View */
+        #team-detail {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            background: var(--card-bg);
+            border: 1px solid var(--neon-blue);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: var(--glow-intense);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #team-detail.visible {
+            display: flex;
+        }
+
+        #team-detail-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        #team-detail-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+            margin: 0 0 10px 0;
+        }
+
+        #team-detail-bio {
+            font-style: italic;
+            font-size: 1.1em;
+            color: var(--neon-pink);
+            margin: 0 0 20px 0;
+        }
+        
+        #team-detail-description {
+            font-size: 1em;
+            line-height: 1.8;
+            max-width: 800px;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .team-members-container {
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .team-members-container h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        #team-members-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            border-radius: 50px;
+            box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .team-member:hover {
+            background: rgba(0, 255, 255, 0.2);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 8px var(--neon-green);
+        }
+
+        .team-member span {
+            color: var(--text-light);
+            font-weight: bold;
+        }
+        
+        .team-member i {
+            color: var(--neon-green);
+        }
+
+        .team-member.leader {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 8px var(--neon-green);
+        }
+        
+        .team-member.leader i {
+            color: var(--neon-blue);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s, opacity 0.3s;
+        }
+
+        .modal-overlay.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--neon-green);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--glow-intense);
+            animation: modalPopUp 0.5s ease-out;
+        }
+
+        @keyframes modalPopUp {
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-green);
+            margin: 0;
+            text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+            font-size: 1.8em;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: var(--neon-pink);
+            font-size: 2em;
+            cursor: pointer;
+            transition: transform 0.2s ease, color 0.3s ease;
+        }
+
+        .modal-close-btn:hover {
+            transform: rotate(90deg);
+            color: #ff33c8;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: var(--neon-blue);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid var(--neon-blue);
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            border-radius: 8px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1em;
+            box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.3);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--neon-green);
+            box-shadow: inset 0 0 8px rgba(0, 255, 136, 0.5), 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .submit-btn {
+            background-color: var(--neon-green);
+            color: var(--dark-bg);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 8px var(--neon-green);
+        }
+
+        .submit-btn:hover {
+            background-color: #00e676;
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+        
+        .submit-btn.secondary {
+            background-color: var(--neon-blue);
+            box-shadow: 0 0 8px var(--neon-blue);
+        }
+
+        .submit-btn.secondary:hover {
+            background-color: #00e6e6;
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        .submit-btn.danger {
+            background-color: var(--neon-pink);
+            box-shadow: 0 0 8px var(--neon-pink);
+        }
+        
+        .submit-btn.danger:hover {
+            background-color: #ff33c8;
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        #message-box {
+            text-align: center;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+
+        #message-box.success {
+            color: var(--neon-green);
+        }
+        
+        #message-box.error {
+            color: var(--neon-pink);
+        }
+        
+        /* Promote Modal Specifics */
+        #promote-members-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .member-to-promote {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .member-to-promote:hover {
+            background: rgba(0, 255, 255, 0.2);
+            border-color: var(--neon-green);
+        }
+        
+        .member-to-promote-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .member-to-promote-info span {
+            font-weight: bold;
+        }
+        
+        .promote-btn {
+            background: var(--neon-green);
+            color: var(--dark-bg);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .promote-btn:hover {
+            background: #00e676;
+            transform: scale(1.05);
+        }
+        
+        #promote-message-box {
+            margin-top: 15px;
+        }
+        
+        /* User Details Modal (new style) */
+        #user-details-modal .modal-content {
+            background: rgba(5, 5, 5, 0.9);
+            border: 1px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+            position: relative;
+        }
+        
+        #user-details-modal .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 255, 255, 0.1) 100%);
+            border-radius: 20px;
+            z-index: -1;
+            filter: blur(10px);
+        }
+
+        .user-details-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #user-details-avatar {
+            width: 120px;
+            height: 120px;
+            background-color: var(--dark-bg);
+            border: 5px solid var(--neon-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.8);
+        }
+
+        #user-details-avatar i {
+            font-size: 4em;
+            color: var(--neon-green);
+        }
+        
+        #user-details-username {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2em;
+            color: var(--neon-green);
+            text-shadow: 0 0 8px rgba(0, 255, 136, 0.8);
+            margin: 0 0 10px 0;
+        }
+        
+        .user-details-stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+        
+        .user-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .user-stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+        
+        .user-stat-label {
+            font-size: 0.8em;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+        
+        .user-stat.placeholder {
+            opacity: 0.6;
+            color: var(--dim-color);
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2em;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            #teams-list {
+                grid-template-columns: 1fr;
+            }
+            .team-member {
+                padding: 8px 12px;
+            }
+            #team-detail {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>Sudo Society Teams</h1>
+            <p>Join forces with fellow hackers to conquer the CTF challenges.</p>
+        </header>
+
+        <div class="action-buttons">
+            <button id="create-team-btn" class="action-btn">Create New Team</button>
+            <button id="leave-team-btn" class="action-btn danger" style="display: none;">Leave Team</button>
+            <button id="promote-leader-btn" class="action-btn secondary" style="display: none;">Promote New Leader</button>
+            <button id="back-to-list-btn" class="action-btn secondary" style="display: none;">Back to Teams List</button>
+        </div>
+
+        <div id="loading-indicator" style="text-align: center; margin-top: 50px; display: none;">
+            <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--neon-green);"></i>
+            <p style="margin-top: 10px;">Loading teams...</p>
+        </div>
+        
+        <div id="teams-view">
+            <div id="teams-list">
+                </div>
+        </div>
+
+        <div id="team-detail">
+            <img id="team-detail-image" src="" alt="Team Image">
+            <h2 id="team-detail-name"></h2>
+            <p id="team-detail-bio"></p>
+            <p id="team-detail-description"></p>
+            <div class="action-buttons">
+                <button id="join-team-btn" class="action-btn secondary" style="display: none;">Join Team</button>
+            </div>
+            <div class="team-members-container">
+                <h4>Team Members</h4>
+                <div id="team-members-list">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="create-team-modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2>Create Your Team</h2>
+                <button class="modal-close-btn" id="create-modal-close">&times;</button>
+            </header>
+            <form id="create-team-form">
+                <div class="form-group">
+                    <label for="team-name">Team Name</label>
+                    <input type="text" id="team-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="team-image">Team Image URL (Optional)</label>
+                    <input type="url" id="team-image" placeholder="https://example.com/logo.png">
+                </div>
+                <div class="form-group">
+                    <label for="team-bio">Short Bio</label>
+                    <input type="text" id="team-bio" maxlength="150" placeholder="A short, catchy tagline for your team.">
+                </div>
+                <div class="form-group">
+                    <label for="team-description">Description</label>
+                    <textarea id="team-description" rows="4"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="submit-btn">Create Team</button>
+                </div>
+            </form>
+            <div id="create-team-message-box" class="message-box"></div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2 id="confirm-modal-title">Confirm Action</h2>
+            </header>
+            <div class="modal-body">
+                <p id="confirm-modal-text">Are you sure you want to do this?</p>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button id="confirm-yes" class="submit-btn">Yes</button>
+                <button id="confirm-no" class="submit-btn secondary" style="background-color: var(--neon-pink);">No</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="alert-modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2 id="alert-modal-title">Notification</h2>
+                <button class="modal-close-btn" id="alert-modal-close">&times;</button>
+            </header>
+            <div class="modal-body">
+                <p id="alert-modal-text"></p>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button id="alert-ok" class="submit-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="promote-leader-modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2>Promote a New Team Leader</h2>
+                <button class="modal-close-btn" id="promote-modal-close">&times;</button>
+            </header>
+            <div class="modal-body">
+                <p>Select a member to become the new team leader. You will automatically leave the team after the promotion.</p>
+                <div id="promote-members-list">
+                    </div>
+                <div id="promote-message-box" class="message-box"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="user-details-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="user-details-modal-close">&times;</button>
+            <div class="user-details-body">
+                <div id="user-details-avatar">
+                    <i class="fas fa-user-ninja"></i>
+                </div>
+                <h2 id="user-details-username"></h2>
+                <div class="user-details-stats">
+                    <div class="user-stat">
+                        <span id="user-details-rank" class="user-stat-value"></span>
+                        <span class="user-stat-label">Global Rank</span>
+                    </div>
+                     <div class="user-stat">
+                        <span id="user-details-score" class="user-stat-value"></span>
+                        <span class="user-stat-label">Total Score</span>
+                    </div>
+                     <div class="user-stat">
+                        <span id="user-details-challenges" class="user-stat-value"></span>
+                        <span class="user-stat-label">Challenges Solved</span>
+                    </div>
+                     <div class="user-stat placeholder">
+                        <span class="user-stat-value">N/A</span>
+                        <span class="user-stat-label">Streaks</span>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://192.168.1.2/Sudo_society_beta/api/teams.php';
+        let currentUserId = null;
+        let userTeamId = null;
+        let currentTeamDetails = null;
+        let teamLeaderId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const teamsView = document.getElementById('teams-view');
+            const teamsList = document.getElementById('teams-list');
+            const teamDetail = document.getElementById('team-detail');
+            const loadingIndicator = document.getElementById('loading-indicator');
+
+            const teamDetailName = document.getElementById('team-detail-name');
+            const teamDetailBio = document.getElementById('team-detail-bio');
+            const teamDetailImage = document.getElementById('team-detail-image');
+            const teamDetailDescription = document.getElementById('team-detail-description');
+            const teamMembersList = document.getElementById('team-members-list');
+
+            const createTeamBtn = document.getElementById('create-team-btn');
+            const leaveTeamBtn = document.getElementById('leave-team-btn');
+            const joinTeamBtn = document.getElementById('join-team-btn');
+            const backToListBtn = document.getElementById('back-to-list-btn');
+            const promoteLeaderBtn = document.getElementById('promote-leader-btn');
+
+            const createTeamModal = document.getElementById('create-team-modal');
+            const createModalCloseBtn = document.getElementById('create-modal-close');
+            const createTeamForm = document.getElementById('create-team-form');
+            const createTeamMessageBox = document.getElementById('create-team-message-box');
+            
+            const confirmModal = document.getElementById('confirm-modal');
+            const confirmModalTitle = document.getElementById('confirm-modal-title');
+            const confirmModalText = document.getElementById('confirm-modal-text');
+            const confirmYesBtn = document.getElementById('confirm-yes');
+            const confirmNoBtn = document.getElementById('confirm-no');
+            
+            const alertModal = document.getElementById('alert-modal');
+            const alertModalTitle = document.getElementById('alert-modal-title');
+            const alertModalText = document.getElementById('alert-modal-text');
+            const alertOkBtn = document.getElementById('alert-ok');
+            const alertModalCloseBtn = document.getElementById('alert-modal-close');
+
+            const promoteLeaderModal = document.getElementById('promote-leader-modal');
+            const promoteModalCloseBtn = document.getElementById('promote-modal-close');
+            const promoteMembersList = document.getElementById('promote-members-list');
+            const promoteMessageBox = document.getElementById('promote-message-box');
+            
+            const userDetailsModal = document.getElementById('user-details-modal');
+            const userDetailsModalCloseBtn = document.getElementById('user-details-modal-close');
+            const userDetailsUsername = document.getElementById('user-details-username');
+            const userDetailsRank = document.getElementById('user-details-rank');
+            const userDetailsScore = document.getElementById('user-details-score');
+            const userDetailsChallenges = document.getElementById('user-details-challenges');
+
+
+            // --- Helper Functions ---
+            const showMessage = (element, message, type) => {
+                element.textContent = message;
+                element.className = `message-box ${type}`;
+            };
+            
+            const showAlert = (title, text) => {
+                alertModalTitle.textContent = title;
+                alertModalText.textContent = text;
+                alertModal.classList.add('visible');
+                document.body.style.overflow = 'hidden';
+            };
+            
+            const hideAlert = () => {
+                alertModal.classList.remove('visible');
+                document.body.style.overflow = 'auto';
+            };
+
+            const showConfirmModal = (title, text, yesCallback, noCallback) => {
+                confirmModalTitle.textContent = title;
+                confirmModalText.textContent = text;
+                confirmModal.classList.add('visible');
+                document.body.style.overflow = 'hidden';
+                
+                confirmYesBtn.onclick = () => {
+                    yesCallback();
+                    confirmModal.classList.remove('visible');
+                    document.body.style.overflow = 'auto';
+                };
+                
+                confirmNoBtn.onclick = () => {
+                    if (noCallback) noCallback();
+                    confirmModal.classList.remove('visible');
+                    document.body.style.overflow = 'auto';
+                };
+            };
+            
+            const showPromoteModal = (members) => {
+                promoteMembersList.innerHTML = '';
+                promoteMessageBox.textContent = '';
+                
+                members.forEach(member => {
+                    const memberDiv = document.createElement('div');
+                    memberDiv.className = 'member-to-promote';
+                    memberDiv.innerHTML = `
+                        <div class="member-to-promote-info">
+                            <i class="fas fa-user-circle"></i>
+                            <span>${member.username}</span>
+                        </div>
+                        <button class="promote-btn" data-member-id="${member.id}">Promote</button>
+                    `;
+                    promoteMembersList.appendChild(memberDiv);
+                });
+                
+                promoteLeaderModal.classList.add('visible');
+                document.body.style.overflow = 'hidden';
+            };
+
+
+            const fetchTeams = async () => {
+                loadingIndicator.style.display = 'block';
+                teamsView.style.display = 'none';
+                teamDetail.style.display = 'none';
+                backToListBtn.style.display = 'none';
+                try {
+                    const response = await fetch(`${API_URL}?action=getTeams`);
+                    const result = await response.json();
+                    if (result.success) {
+                        renderTeamsList(result.data);
+                        teamsView.style.display = 'block';
+                        await fetchUserTeamStatus();
+                    } else {
+                        showMessage(teamsList, result.error, 'error');
+                    }
+                } catch (error) {
+                    showMessage(teamsList, 'Failed to fetch teams. Please try again later.', 'error');
+                } finally {
+                    loadingIndicator.style.display = 'none';
+                }
+            };
+            
+            const fetchUserTeamStatus = async () => {
+                try {
+                    const response = await fetch(`${API_URL}?action=getUserTeam`);
+                    const result = await response.json();
+                    if (result.success && result.data) {
+                        currentUserId = result.data.id;
+                        userTeamId = result.data.team_id;
+                    } else {
+                        currentUserId = null;
+                        userTeamId = null;
+                    }
+                    updateUIBasedOnTeamStatus();
+                } catch (error) {
+                    console.error('Failed to fetch user team status:', error);
+                    currentUserId = null;
+                    userTeamId = null; // Assume no team on error
+                    updateUIBasedOnTeamStatus();
+                }
+            };
+
+            const renderTeamsList = (teams) => {
+                teamsList.innerHTML = '';
+                if (teams.length === 0) {
+                    teamsList.innerHTML = '<p style="text-align: center; margin-top: 50px;">No teams have been created yet. Be the first!</p>';
+                    return;
+                }
+                teams.forEach(team => {
+                    const teamCard = document.createElement('div');
+                    teamCard.className = 'team-card';
+                    teamCard.dataset.teamId = team.id;
+                    teamCard.innerHTML = `
+                        <div class="team-card-header">
+                            <img src="${team.image_url}" alt="${team.team_name} Logo" class="team-card-image">
+                            <div class="team-card-header-text">
+                                <h3>${team.team_name}</h3>
+                                <p>${team.bio}</p>
+                            </div>
+                        </div>
+                        <div class="team-card-members-list">
+                            ${team.members.map(member => `<div class="team-card-member" data-user-id="${member.id}">
+                                <i class="fas fa-user-circle"></i><span>${member.username}</span>
+                            </div>`).join('')}
+                        </div>
+                    `;
+                    teamCard.addEventListener('click', (event) => {
+                        const userId = event.target.closest('.team-card-member')?.dataset.userId;
+                        if (userId) {
+                            event.stopPropagation();
+                            fetchUserDetails(userId);
+                        } else {
+                             fetchTeamDetails(team.id);
+                        }
+                    });
+                    teamsList.appendChild(teamCard);
+                });
+            };
+
+            const fetchTeamDetails = async (teamId) => {
+                loadingIndicator.style.display = 'block';
+                teamsView.style.display = 'none';
+                teamDetail.style.display = 'none';
+                backToListBtn.style.display = 'block';
+                try {
+                    const response = await fetch(`${API_URL}?action=getTeamDetails&team_id=${teamId}`);
+                    const result = await response.json();
+                    if (result.success) {
+                        currentTeamDetails = result.data;
+                        teamLeaderId = result.data.leader_id;
+                        renderTeamDetails(currentTeamDetails);
+                        teamDetail.style.display = 'flex';
+                        updateUIBasedOnTeamStatus();
+                    } else {
+                        showAlert("Error", result.error);
+                    }
+                } catch (error) {
+                    showAlert("Error", 'Failed to fetch team details. Please try again later.');
+                } finally {
+                    loadingIndicator.style.display = 'none';
+                }
+            };
+
+            const renderTeamDetails = (team) => {
+                teamDetailName.textContent = team.team_name;
+                teamDetailBio.textContent = team.bio;
+                teamDetailImage.src = team.image_url;
+                teamDetailImage.alt = `${team.team_name} Logo`;
+                teamDetailDescription.textContent = team.description;
+                
+                teamMembersList.innerHTML = '';
+                team.members.forEach(member => {
+                    const memberDiv = document.createElement('div');
+                    memberDiv.className = `team-member ${member.id == team.leader_id ? 'leader' : ''}`;
+                    memberDiv.innerHTML = `
+                        <i class="fas fa-${member.id == team.leader_id ? 'crown' : 'user-circle'}"></i>
+                        <span>${member.username}</span>
+                    `;
+                    memberDiv.addEventListener('click', () => {
+                        fetchUserDetails(member.id);
+                    });
+                    teamMembersList.appendChild(memberDiv);
+                });
+            };
+            
+            const createTeam = async (teamData) => {
+                try {
+                    const response = await fetch(`${API_URL}?action=createTeam`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(teamData),
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        showMessage(createTeamMessageBox, result.message, 'success');
+                        setTimeout(() => {
+                            createTeamModal.classList.remove('visible');
+                            fetchTeams();
+                        }, 1500);
+                    } else {
+                        showMessage(createTeamMessageBox, result.error, 'error');
+                    }
+                } catch (error) {
+                    showMessage(createTeamMessageBox, 'Failed to create team. Please try again.', 'error');
+                }
+            };
+
+            const joinTeam = async (teamId) => {
+                try {
+                    const response = await fetch(`${API_URL}?action=joinTeam`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ team_id: teamId }),
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        showAlert("Success", "You have successfully joined the team!");
+                        userTeamId = teamId;
+                        fetchTeams();
+                        teamDetail.style.display = 'none';
+                    } else {
+                        showAlert("Error", result.error);
+                    }
+                } catch (error) {
+                    showAlert("Error", 'An error occurred while trying to join the team.');
+                }
+            };
+
+            const leaveTeam = async () => {
+                showConfirmModal(
+                    'Leave Team',
+                    'Are you sure you want to leave your team? This action is permanent.',
+                    async () => {
+                        try {
+                            const response = await fetch(`${API_URL}?action=leaveTeam`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                            });
+                            const result = await response.json();
+                            if (result.success) {
+                                showAlert("Success", result.message);
+                                userTeamId = null;
+                                fetchTeams();
+                                teamDetail.style.display = 'none';
+                            } else {
+                                showAlert("Error", result.error);
+                            }
+                        } catch (error) {
+                            showAlert("Error", 'An error occurred while trying to leave the team.');
+                        }
+                    },
+                    () => {}
+                );
+            };
+            
+            const promoteNewLeader = async (newLeaderId) => {
+                const teamId = currentTeamDetails.id;
+                try {
+                    const response = await fetch(`${API_URL}?action=promoteLeader`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ team_id: teamId, new_leader_id: newLeaderId }),
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        promoteLeaderModal.classList.remove('visible');
+                        showAlert("Success", result.message);
+                        userTeamId = null;
+                        fetchTeams();
+                        teamDetail.style.display = 'none';
+                    } else {
+                        showAlert("Error", result.error);
+                    }
+                } catch (error) {
+                    showAlert("Error", 'An error occurred during promotion.');
+                }
+            };
+
+            const fetchUserDetails = async (userId) => {
+                try {
+                    const response = await fetch(`${API_URL}?action=getUserDetails&user_id=${userId}`);
+                    const result = await response.json();
+                    if (result.success) {
+                        const user = result.data;
+                        userDetailsUsername.textContent = user.username;
+                        userDetailsRank.textContent = user.current_rank;
+                        userDetailsScore.textContent = user.total_score;
+                        userDetailsChallenges.textContent = user.solved_challenges_count;
+                        userDetailsModal.classList.add('visible');
+                    } else {
+                        showAlert("Error", result.error);
+                    }
+                } catch (error) {
+                    showAlert("Error", 'An error occurred while fetching user details.');
+                }
+            };
+
+
+            const updateUIBasedOnTeamStatus = () => {
+                if (userTeamId) {
+                    createTeamBtn.disabled = true;
+                    createTeamBtn.style.opacity = '0.5';
+                    leaveTeamBtn.style.display = 'block';
+                } else {
+                    createTeamBtn.disabled = false;
+                    createTeamBtn.style.opacity = '1';
+                    leaveTeamBtn.style.display = 'none';
+                }
+                
+                if (teamDetail.style.display === 'flex' && currentTeamDetails) {
+                    joinTeamBtn.style.display = (userTeamId === null) ? 'block' : 'none';
+                    promoteLeaderBtn.style.display = (currentUserId == teamLeaderId && currentTeamDetails.members.length > 1) ? 'block' : 'none';
+                    leaveTeamBtn.style.display = (userTeamId == currentTeamDetails.id) ? 'block' : 'none';
+                } else {
+                    joinTeamBtn.style.display = 'none';
+                    promoteLeaderBtn.style.display = 'none';
+                }
+            };
+
+            // Event Listeners
+            createTeamBtn.addEventListener('click', () => {
+                createTeamModal.classList.add('visible');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            createModalCloseBtn.addEventListener('click', () => {
+                createTeamModal.classList.remove('visible');
+                document.body.style.overflow = 'auto';
+                createTeamForm.reset();
+                createTeamMessageBox.textContent = '';
+            });
+
+            createTeamForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const teamName = document.getElementById('team-name').value;
+                const teamBio = document.getElementById('team-bio').value;
+                const teamImage = document.getElementById('team-image').value;
+                const teamDescription = document.getElementById('team-description').value;
+
+                createTeam({
+                    team_name: teamName,
+                    bio: teamBio,
+                    image_url: teamImage,
+                    description: teamDescription
+                });
+            });
+
+            joinTeamBtn.addEventListener('click', (event) => {
+                const teamId = currentTeamDetails.id;
+                joinTeam(teamId);
+            });
+            
+            leaveTeamBtn.addEventListener('click', async () => {
+                if (currentUserId == teamLeaderId && currentTeamDetails.members.length > 1) {
+                     showAlert("Error", "You are the team leader. You must promote another member before you can leave the team.");
+                } else {
+                    leaveTeam();
+                }
+            });
+            
+            promoteLeaderBtn.addEventListener('click', () => {
+                const otherMembers = currentTeamDetails.members.filter(member => member.id != currentUserId);
+                showPromoteModal(otherMembers);
+            });
+            
+            promoteModalCloseBtn.addEventListener('click', () => {
+                 promoteLeaderModal.classList.remove('visible');
+                 document.body.style.overflow = 'auto';
+            });
+
+            promoteMembersList.addEventListener('click', (event) => {
+                if (event.target.classList.contains('promote-btn')) {
+                    const newLeaderId = event.target.dataset.memberId;
+                    showConfirmModal(
+                        "Confirm Promotion",
+                        `Are you sure you want to promote this member to team leader? You will automatically leave the team.`,
+                        () => promoteNewLeader(newLeaderId),
+                        () => {}
+                    );
+                }
+            });
+            
+            userDetailsModalCloseBtn.addEventListener('click', () => {
+                userDetailsModal.classList.remove('visible');
+            });
+
+
+            backToListBtn.addEventListener('click', () => {
+                teamsView.style.display = 'block';
+                teamDetail.style.display = 'none';
+                backToListBtn.style.display = 'none';
+                promoteLeaderBtn.style.display = 'none';
+                updateUIBasedOnTeamStatus();
+            });
+            
+            alertOkBtn.addEventListener('click', hideAlert);
+            alertModalCloseBtn.addEventListener('click', hideAlert);
+
+            // Initial load
+            fetchTeams();
+        });
+    </script>
+</body>
+</html>

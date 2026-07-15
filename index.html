@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sudo Society CTF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/index_style.css">
+</head>
+<body>
+  <div class="scanline"></div>
+  <div class="bg-pulse"></div>
+
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo" onclick="window.location.href='#'">
+          <img src="sudo_society.png" alt="Sudo Society Logo" class="logo-img">
+          <span class="logo-text">Sudo Society</span>
+        </div>
+        <nav>
+          <a href="#">Home</a>
+          <a href="#challenges">Challenges</a>
+          <a href="#leaderboard">Leaderboard</a>
+          <a href="event.php">Event</a>
+          <a href="#">About</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <div class="glitch-container">
+            <h1 class="glitch-main">Sudo Society CTF</h1>
+            <!-- <div class="glitch-layer glitch-red">Sudo  CTF</div>
+            <div class="glitch-layer glitch-blue">Sudo Society CTF</div> -->
+          </div>
+          <p class="hero-subtitle">Dive into the ultimate cybersecurity battleground. Test your skills against elite hackers worldwide.</p>
+          <button class="cta-button" id="registerBtn">REGISER NOW</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="challenges" class="challenges">
+      <div class="container">
+        <h2 class="section-title">Challenge Categories</h2>
+        <div class="challenges-grid">
+          <div class="challenge-card">
+            <div class="challenge-icon">[WEB]</div>
+            <h3 class="challenge-title">Web Exploitation</h3>
+            <p class="challenge-desc">Test your skills against vulnerable web applications. Find and exploit vulnerabilities like XSS, SQLi, and CSRF.</p>
+            <div class="challenge-stats">
+              <span>2 Challenges</span>
+              <span>5+ Players</span>
+            </div>
+          </div>
+          <div class="challenge-card">
+            <div class="challenge-icon">[CRYPTO]</div>
+            <h3 class="challenge-title">Cryptography</h3>
+            <p class="challenge-desc">Break encryption schemes, crack hashes, and solve complex cipher challenges.</p>
+            <div class="challenge-stats">
+              <span>1 Challenges</span>
+              <span>4+ Players</span>
+            </div>
+          </div>
+          <div class="challenge-card">
+            <div class="challenge-icon">[PWN]</div>
+            <h3 class="challenge-title">Binary Exploitation</h3>
+            <p class="challenge-desc">Reverse engineer binaries, exploit buffer overflows, and perform memory corruption attacks.</p>
+            <div class="challenge-stats">
+              <span>2 Challenges</span>
+              <span>4+ Players</span>
+            </div>
+          </div>
+          <div class="challenge-card">
+            <div class="challenge-icon">[RE]</div>
+            <h3 class="challenge-title">Reverse Engineering</h3>
+            <p class="challenge-desc">Analyze and decompile binaries to understand their inner workings and find hidden flags.</p>
+            <div class="challenge-stats">
+              <span>1 Challenges</span>
+              <span>3+ Players</span>
+            </div>
+          </div>
+          <div class="challenge-card">
+            <div class="challenge-icon">[FORENSIC]</div>
+            <h3 class="challenge-title">Digital Forensics</h3>
+            <p class="challenge-desc">Analyze disk images, network traffic, and memory dumps to uncover hidden secrets.</p>
+            <div class="challenge-stats">
+              <span>1 Challenges</span>
+              <span>3+ Players</span>
+            </div>
+          </div>
+          <div class="challenge-card">
+            <div class="challenge-icon">[MISC]</div>
+            <h3 class="challenge-title">Miscellaneous</h3>
+            <p class="challenge-desc">Various challenges that don't fit into other categories, including steganography and programming.</p>
+            <div class="challenge-stats">
+              <span>2 Challenges</span>
+              <span>3+ Players</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- <section id="countdown" class="countdown">
+      <h3 class="countdown-title">EVENT STARTS IN</h3>
+      <div class="countdown-timer" id="countdownTimer">
+        <div class="countdown-item">
+          <div class="countdown-number" id="days">00</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-number" id="hours">00</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-number" id="minutes">00</div>
+          <div class="countdown-label">Minutes</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-number" id="seconds">00</div>
+          <div class="countdown-label">Seconds</div>
+        </div>
+      </div>
+    </section> -->
+
+    <section id="leaderboard" class="leaderboard">
+      <div class="container">
+        <h2 class="section-title">Leaderboard</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Team</th>
+              <th>Points</th>
+              <th>Solved</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="rank">1</td>
+              <td>0xBADF00D</td>
+              <td>4250</td>
+              <td>32</td>
+            </tr>
+            <tr>
+              <td class="rank">2</td>
+              <td>Stack Smashers</td>
+              <td>3980</td>
+              <td>30</td>
+            </tr>
+            <tr>
+              <td class="rank">3</td>
+              <td>Shell Collectors</td>
+              <td>3750</td>
+              <td>28</td>
+            </tr>
+            <tr>
+              <td class="rank">4</td>
+              <td>Null Byte</td>
+              <td>3520</td>
+              <td>27</td>
+            </tr>
+            <tr>
+              <td class="rank">5</td>
+              <td>ROP Stars</td>
+              <td>3350</td>
+              <td>26</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-logo">Sudo Society CTF</div>
+      <div class="footer-links">
+        <a href="#">Home</a>
+        <a href="#challenges">Challenges</a>
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="event.php">Event</a>
+        <a href="#">Rules</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="social-links">
+        <a href="#" aria-label="Twitter"><i>𝕏</i></a>
+        <a href="#" aria-label="Discord"><i>𝔻</i></a>
+        <a href="#" aria-label="GitHub"><i>Ⓖ</i></a>
+        <a href="#" aria-label="YouTube"><i>Ⓨ</i></a>
+      </div>
+      <p class="copyright">© 2023 Sudo Society. All rights reserved. Developed by JENSLIN</p>
+    </div>
+  </footer>
+
+<script src="assets/js/index.js"></script>
+</body>
+</html>
